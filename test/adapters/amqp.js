@@ -52,7 +52,7 @@ describe('adapters/amqp', function () {
 
       var options = {
         key: 'export',
-        exchange: 'caresharing.medintegrate.exchange'
+        exchange: 'caresharing.medintegrate'
       };
 
       repo.amqp.insert('transaction_logs', transaction, options)

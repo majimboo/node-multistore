@@ -10,3 +10,4 @@ services:
 before_script:
   - sudo pip install cqlsh
   - cqlsh -f test/schema.cql
+  - rabbitmqadmin declare exchange name=caresharing.medintegrate type=direct durable=true

@@ -62,7 +62,7 @@ describe('repo', function () {
       var options = {
         amqp: {
           key: 'export',
-          exchange: 'caresharing.medintegrate.exchange'
+          exchange: 'caresharing.medintegrate'
         }
       };
 
