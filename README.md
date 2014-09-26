@@ -1,17 +1,17 @@
-CS-REPO
-=======
+MultiStore
+==========
 
-A storage abstraction prototype for cs-frameworks.
+Simple Node.JS O[R/D]M.
 
 Example
 -------
 
-    var Repo = require('cs-repo');
+    var Store = require('multistore');
 
     // ordering gives priority. In this configuration cassandra
     // is the highest priority. If cassandra fails, the lower
     // priorities does not execute.
-    var repo = new Repo({
+    var store = new Store({
       cassandra: {
         contacts: ['localhost'],
         keyspace: 'medintegrate'
@@ -22,10 +22,10 @@ Example
     });
 
     // load all adapters
-    repo.init(done_callback);
+    store.init(done_callback);
 
     // define a schema
-    repo.schema('transaction_logs', {
+    store.schema('transaction_logs', {
       channel_id:       { type: 'text',     required: true },
       date:             { type: 'text',     required: true },
       event_id:         { type: 'timeuuid', required: true },
@@ -52,14 +52,14 @@ Example
       recipient_id:     chance.word(),
       data_id:          chance.word(),
       event_status:     chance.word(),
-      i_get_ignored:   'because I am not defined in repo.schema()' // wont be inserted
+      i_get_ignored:   'because I am not defined in store.schema()' // wont be inserted
     }
 
     // insert to all active adapters
     // in this case: cassandra then amqp
-    repo.insert('transaction_logs', transaction, done_callback);
+    store.insert('transaction_logs', transaction, done_callback);
 
     // insert to specific adapter
     // if 2nd argument is an array, it gets inserted in batch
     // if its an object it gets inserted with execute prepared.
-    repo.cassandra.insert('transaction_logs', transaction, done_callback);
+    store.cassandra.insert('transaction_logs', transaction, done_callback);

@@ -1,16 +1,11 @@
 {
-  "name": "repo-cs",
-  "version": "0.2.0-pre1",
-  "description": "Repo Stuff",
-  "scripts": {
-    "test": "./node_modules/mocha/bin/mocha",
-    "preinstall": "npm rebuild"
+  "name": "multistore",
+  "version": "0.0.0",
+  "description": "MultiStore",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git.caresharing:palmade/repo-node"
-  },
-  "author": "Palmade",
   "dependencies": {
     "amqplib": "^0.2.1",
     "bluebird": "^2.3.2",
@@ -21,5 +16,18 @@
     "chance": "^0.6.1",
     "mocha": "^1.21.4",
     "should": "^4.0.4"
-  }
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/majimboo/node-multistore.git"
+  },
+  "author": "Majid Arif Siddiqui <me@majidarif.com> (http://blog.majidarif.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/majimboo/node-multistore/issues"
+  },
+  "homepage": "https://github.com/majimboo/node-multistore"
 }
