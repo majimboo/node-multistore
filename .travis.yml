@@ -10,7 +10,6 @@ services:
 before_script:
   - sudo pip install cqlsh
   - cqlsh -f test/schema.cql
-  - curl -o /tmp/rabbitmqadmin http://localhost:15672/cli/rabbitmqadmin
-  - chmod +x /tmp/rabbitmqadmin
-  - mv /tmp/rabbitmqadmin /usr/local/bin/
+  - sudo curl -o /usr/local/bin/rabbitmqadmin http://localhost:15672/cli/rabbitmqadmin
+  - sudo chmod +x /usr/local/bin/rabbitmqadmin
   - rabbitmqadmin declare exchange name=caresharing.medintegrate type=direct durable=true
