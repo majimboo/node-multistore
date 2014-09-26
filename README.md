@@ -1,4 +1,4 @@
-MultiStore
+MultiStore [![Build Status](https://travis-ci.org/majimboo/node-multistore.svg?branch=master)](https://travis-ci.org/majimboo/node-multistore)
 ==========
 
 Simple Node.JS O[R/D]M.
