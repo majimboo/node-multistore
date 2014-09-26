@@ -1,0 +1,25 @@
+{
+  "name": "repo-cs",
+  "version": "0.2.0-pre1",
+  "description": "Repo Stuff",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha",
+    "preinstall": "npm rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git.caresharing:palmade/repo-node"
+  },
+  "author": "Palmade",
+  "dependencies": {
+    "amqplib": "^0.2.1",
+    "bluebird": "^2.3.2",
+    "cassandra-driver": "^1.0.0-beta1",
+    "lodash": "^2.4.1"
+  },
+  "devDependencies": {
+    "chance": "^0.6.1",
+    "mocha": "^1.21.4",
+    "should": "^4.0.4"
+  }
+}
