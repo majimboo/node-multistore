@@ -2,3 +2,10 @@ language: node_js
 node_js:
   - "0.11"
   - "0.10"
+
+services:
+  - cassandra
+  - rabbitmq
+
+before_script:
+  - cqlsh -f test/schema.cql
