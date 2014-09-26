@@ -8,5 +8,4 @@ services:
   - rabbitmq
 
 before_script:
-  - pip install cqlsh
-  - cqlsh -f test/schema.cql
+  - /var/lib/cassandra/bin/cqlsh -f test/schema.cql
