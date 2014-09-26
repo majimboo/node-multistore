@@ -8,4 +8,5 @@ services:
   - rabbitmq
 
 before_script:
+  - pip install cqlsh
   - cqlsh -f test/schema.cql
