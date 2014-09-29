@@ -12,7 +12,9 @@ var repo = new Repo({
     keyspace: 'medintegrate'
   },
   amqp: {
-    host: 'amqp://localhost'
+    host: 'amqp://localhost',
+    key: 'export',
+    exchange: 'caresharing.medintegrate'
   }
 });
 
@@ -38,12 +40,14 @@ describe('repo', function () {
         recipient_id:     { type: 'text',     required: true },
         data_id:          { type: 'text',     required: true },
         event_status:     { type: 'text',     required: true }
-      }, {
+      }
+      /** , {
         amqp: {
           key: 'export',
           exchange: 'caresharing.medintegrate'
         }
-      });
+      } **/
+      );
       done();
     });
   });
@@ -65,10 +69,12 @@ describe('repo', function () {
       }
 
       var options = {
+        /**
         amqp: {
           key: 'export',
           exchange: 'caresharing.medintegrate'
         }
+        **/
       };
 
       repo.insert('transaction_logs', transaction, options, done);
