@@ -38,6 +38,11 @@ describe('repo', function () {
         recipient_id:     { type: 'text',     required: true },
         data_id:          { type: 'text',     required: true },
         event_status:     { type: 'text',     required: true }
+      }, {
+        amqp: {
+          key: 'export',
+          exchange: 'caresharing.medintegrate'
+        }
       });
       done();
     });
