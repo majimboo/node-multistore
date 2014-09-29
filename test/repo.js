@@ -22,7 +22,9 @@ describe('repo', function () {
 
   describe('#init', function () {
     it('should load all enabled adapters', function (done) {
-      repo.init(done);
+      repo.init({
+        adapters: ['cassandra', 'amqp']
+      }, done);
     });
   });
 
