@@ -21,6 +21,11 @@ Example
         // will act as default ex and key if no schema options are given
         exchange: 'default',
         key: 'default'
+      },
+      mysql: {
+        database: 'medintegrate',
+        // will act as default table if no schema options are given
+        table: 'transactions'
       }
     });
 
