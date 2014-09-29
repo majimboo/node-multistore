@@ -22,7 +22,13 @@ Example
     });
 
     // load all adapters
-    store.init(done_callback);
+    // accepts an optional first parameter as additional options
+    store.init({
+      // inserts to both adapters
+      adapters: ['cassandra', 'mysql'],
+      // this adapter acts like a callback
+      callback: ['rabbitmq']
+    }, done_callback);
 
     // define a schema
     store.schema('transaction_logs', {
@@ -37,6 +43,12 @@ Example
       recipient_id:     { type: 'text',     required: true },
       data_id:          { type: 'text',     required: true },
       event_status:     { type: 'text',     required: true }
+    }, {
+      // including optional adapter specific options
+      // if included here it modifies how all insert acts
+      cassandra: { table: 'transaction_logs' },
+      mysql: { ignore: ['sender_id'], table: 'transactions' },
+      amqp: { exchange: 'myexchange', key: 'mykey' }
     });
 
     // if a required field is missing it throws an error
@@ -63,3 +75,14 @@ Example
     // if 2nd argument is an array, it gets inserted in batch
     // if its an object it gets inserted with execute prepared.
     store.cassandra.insert('transaction_logs', transaction, done_callback);
+
+    // including optional adapter specific options
+    // if included here it modifies how each insert acts
+    var options = {
+      amqp: {
+        key: 'export',
+        exchange: 'caresharing.medintegrate'
+      }
+    };
+
+    repo.insert('transaction_logs', transaction, options, done);
