@@ -17,7 +17,10 @@ Example
         keyspace: 'medintegrate'
       },
       amqp: {
-        host: 'amqp://localhost'
+        host: 'amqp://localhost',
+        // will act as default ex and key if no schema options are given
+        exchange: 'default',
+        key: 'default'
       }
     });
 
@@ -45,7 +48,7 @@ Example
       event_status:     { type: 'text',     required: true }
     }, {
       // including optional adapter specific options
-      // if included here it modifies how all insert acts
+      // if included here it modifies how all insert or actions behave
       cassandra: { table: 'transaction_logs' },
       mysql: { ignore: ['sender_id'], table: 'transactions' },
       amqp: { exchange: 'myexchange', key: 'mykey' }
@@ -77,7 +80,7 @@ Example
     store.cassandra.insert('transaction_logs', transaction, done_callback);
 
     // including optional adapter specific options
-    // if included here it modifies how each insert acts
+    // if included here it modifies how each insert or actions behave
     var options = {
       amqp: {
         key: 'export',
