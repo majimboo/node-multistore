@@ -21,7 +21,6 @@ API
       callback: ['amqp']
     });
 
-    // schemas
     store.schema(store.cassandra, 'data_points', {
       uid:        { type: 'string',          required: true },
       system_id:  { type: 'string',          required: true },
@@ -29,7 +28,7 @@ API
       journal_id: { type: 'uuid',            required: true },
       attributes: { type: 'map<text, text>', required: true },
     }, {
-      table: 'data_points'
+      table: 'data_points' // optional. will use schema name if not defined.
     });
 
     store.schema(store.mysql, 'data_points_0', {
@@ -62,7 +61,7 @@ API
     });
 
     var DataPoint = store.model('DataPoint', {
-      cassandra: ['data_points'],
+      cassandra: ['data_points'], // schema names
       mysql: ['data_points_0', 'patient_profile', 'profiles', 'attributes']
     });
 
