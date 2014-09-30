@@ -17,8 +17,8 @@ API
     });
 
     store.init({
-      adapters: ['cassandra', 'mysql'],
-      callback: ['amqp']
+      create: ['cassandra', 'mysql'],
+      afterCreate: ['amqp'] // do after create event
     });
 
     store.schema(store.cassandra, 'data_points', {
