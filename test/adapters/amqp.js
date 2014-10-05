@@ -8,10 +8,6 @@ var Repo = require('../../');
 var repo = new Repo({
   amqp: {
     host: 'amqp://localhost'
-  },
-  cassandra: {
-    contacts: ['localhost'],
-    keyspace: 'medintegrate'
   }
 });
 
@@ -32,6 +28,14 @@ repo.schema('transaction_logs', {
 describe('adapters/amqp', function () {
   before(function (done) {
     repo.init(done);
+  });
+
+  describe('#connect', function () {
+    it('connects to the amqp server', function (done) {
+      // promise returns a connection object
+      // so then(done) doesnt work
+      repo.amqp.connect().finally(done);
+    });
   });
 
   describe('#insert', function () {

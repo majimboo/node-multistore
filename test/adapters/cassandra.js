@@ -7,11 +7,8 @@ var cassandra = require('cassandra-driver');
 var Repo = require('../../');
 
 var repo = new Repo({
-  amqp: {
-    host: 'amqp://localhost'
-  },
   cassandra: {
-    contacts: ['localhost'],
+    contactPoints: ['localhost'],
     keyspace: 'medintegrate'
   }
 });
@@ -33,6 +30,12 @@ repo.schema('transaction_logs', {
 describe('adapters/cassandra', function () {
   before(function (done) {
     repo.init(done);
+  });
+
+  describe('#connect', function () {
+    it('connects to the cassandra server', function (done) {
+      repo.cassandra.connect().then(done).catch(done);
+    });
   });
 
   describe('#insert', function () {
