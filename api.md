@@ -21,7 +21,7 @@ API
       afterCreate: ['amqp'] // do after create event
     });
 
-    store.schema(store.cassandra, 'data_points', {
+    store.schema('cassandra', 'data_points', {
       uid:        { type: 'string',          required: true },
       system_id:  { type: 'string',          required: true },
       code:       { type: 'timeuuid',        required: true },
@@ -31,28 +31,29 @@ API
       table: 'data_points' // optional. will use schema name if not defined.
     });
 
-    store.schema(store.mysql, 'data_points_0', {
+    store.schema('mysql', 'data_points_0', {
       id:   { type: 'integer', required: true },
       code: { type: 'string',  required: true }
     }, {
       table: 'data_points_0'
     });
 
-    store.schema(store.mysql, 'patient_profile', {
+    store.schema('mysql', 'patient_profile', {
       id:          { type: 'integer', required: true },
       system_code: { type: 'integer', required: true }
     }, {
       table: 'patient_profile'
     });
 
-    store.schema(store.mysql, 'profiles', {
+    store.schema('mysql', 'profiles', {
       id:           { type: 'integer', required: true },
       medsafe_guid: { type: 'integer', required: true }
     }, {
       table: 'profiles'
+      map: {uid: id}
     });
 
-    store.schema(store.mysql, 'attributes', {
+    store.schema('mysql', 'attributes', {
       id:    { type: 'integer', required: true },
       key:   { type: 'string',  required: true },
       value: { type: 'string',  required: true }
