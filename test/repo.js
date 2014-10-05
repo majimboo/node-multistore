@@ -29,7 +29,7 @@ describe('Repo', function () {
 
   describe('#schema', function () {
     it('should return a model', function (done) {
-      var Transactions = repo.schema('transaction_logs', {
+      var Transaction = repo.schema('transaction_logs', {
         channel_id:       { type: 'text',     required: true },
         date:             { type: 'text',     required: true },
         event_id:         { type: 'timeuuid', required: true },
@@ -50,7 +50,7 @@ describe('Repo', function () {
       } **/
       );
 
-      Transactions.should.be.an.instanceof(Object);
+      Transaction.should.be.an.instanceof(Object);
       done();
     });
   });
@@ -88,7 +88,7 @@ describe('Repo', function () {
 describe('Model', function () {
   describe('#create', function () {
     it('should work as expected with model syntax', function (done) {
-      var Transactions = repo.schema('transaction_logs', {
+      var Transaction = repo.schema('transaction_logs', {
         channel_id:       { type: 'text',     required: true },
         date:             { type: 'text',     required: true },
         event_id:         { type: 'timeuuid', required: true },
@@ -116,7 +116,7 @@ describe('Model', function () {
         event_status:     chance.word()
       }
 
-      Transactions.create(transaction, done);
+      Transaction.create(transaction, done);
     });
   });
 });
