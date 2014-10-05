@@ -6,7 +6,7 @@ var cassandra = require('cassandra-driver');
 
 var Repo = require('../');
 
-var repo = new Repo({
+var db = new Repo({
   cassandra: {
     on: 'create',
     contactPoints: ['localhost'],
@@ -30,13 +30,13 @@ var repo = new Repo({
 describe('Repo', function () {
   describe('#init', function () {
     it('should load all enabled adapters', function (done) {
-      repo.init(done);
+      db.init(done);
     });
   });
 
   describe('#schema', function () {
     it('should return a model', function (done) {
-      var Transaction = repo.schema('transaction_logs', {
+      var Transaction = db.schema('transaction_logs', {
         channel_id:       { type: 'text',     required: true },
         date:             { type: 'text',     required: true },
         event_id:         { type: 'timeuuid', required: true },
@@ -84,50 +84,57 @@ describe('Repo', function () {
         **/
       };
 
-      repo.insert('transaction_logs', transaction, options, done);
+      db.insert('transaction_logs', transaction, options, done);
     });
   });
 });
 
 describe('Model', function () {
   describe('#create', function () {
-    it('should work as expected with model syntax', function (done) {
-      var Transaction = repo.schema('transaction_logs', {
-        channel_id:       { type: 'text',     required: true },
-        date:             { type: 'text',     required: true },
-        event_id:         { type: 'timeuuid', required: true },
-        transaction_id:   { type: 'uuid',     required: true },
-        source_system_id: { type: 'text',     required: true },
-        target_system_id: { type: 'text',     required: true },
-        subject_id:       { type: 'text',     required: true },
-        sender_id:        { type: 'text',     required: true },
-        recipient_id:     { type: 'text',     required: true },
-        data_id:          { type: 'text',     required: true },
-        event_status:     { type: 'text',     required: true }
-      }, {
-        mysql: {
-          table: 'txl',
-          mapping: {
-            transaction_id: 'txn_id'
-          }
-        }
-      });
+    // it('should work as expected with model syntax', function (done) {
 
-      var transaction = {
-        channel_id:       chance.word(),
-        date:             chance.date({string: true}),
-        event_id:         cassandra.types.timeuuid(),
-        transaction_id:   cassandra.types.uuid(),
-        source_system_id: chance.word(),
-        target_system_id: chance.word(),
-        subject_id:       chance.word(),
-        sender_id:        chance.word(),
-        recipient_id:     chance.word(),
-        data_id:          chance.word(),
-        event_status:     chance.word()
-      }
+    //   // cassandra inserts
+    //   var CaTransaction = db.cassandra.schema({
+    //     channel_id:       { type: 'text',     required: true },
+    //     date:             { type: 'text',     required: true },
+    //     event_id:         { type: 'timeuuid', required: true },
+    //     transaction_id:   { type: 'uuid',     required: true },
+    //     source_system_id: { type: 'text',     required: true },
+    //     target_system_id: { type: 'text',     required: true },
+    //     subject_id:       { type: 'text',     required: true },
+    //     sender_id:        { type: 'text',     required: true },
+    //     recipient_id:     { type: 'text',     required: true },
+    //     data_id:          { type: 'text',     required: true },
+    //     event_status:     { type: 'text',     required: true }
+    //   }, {
+    //     table: 'transaction_logs'
+    //   });
 
-      Transaction.create(transaction, done);
-    });
+    //   // mysql inserts
+    //   var MyTransaction = db.mysql.schema({
+    //     channel_id:     { type: 'text', required: true },
+    //     transaction_id: { type: 'uuid', required: true }
+    //   }, {
+    //     table: 'txl'
+    //   });
+
+    //   var Transaction = db.model('Transaction', [CaTransaction, MyTransaction]);
+
+    //   var transaction = {
+    //     channel_id:       chance.word(),
+    //     date:             chance.date({string: true}),
+    //     event_id:         cassandra.types.timeuuid(),
+    //     transaction_id:   cassandra.types.uuid(),
+    //     source_system_id: chance.word(),
+    //     target_system_id: chance.word(),
+    //     subject_id:       chance.word(),
+    //     sender_id:        chance.word(),
+    //     recipient_id:     chance.word(),
+    //     data_id:          chance.word(),
+    //     event_status:     chance.word()
+    //   }
+
+    //   Transaction.create(transaction, done);
+    // });
   });
 });
