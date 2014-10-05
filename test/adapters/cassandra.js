@@ -39,7 +39,7 @@ describe('adapters/cassandra', function () {
   });
 
   describe('#insert', function () {
-    it('recieves a single transaction', function (done) {
+    it('receives a single transaction', function (done) {
       var transaction = {
         channel_id:       chance.word(),
         date:             chance.date({string: true}),
