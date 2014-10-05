@@ -134,8 +134,7 @@ describe('Model', function () {
         event_status:     chance.word()
       }
 
-      done();
-      // Transaction.create(transaction, done);
+      Transaction.create(transaction, done);
     });
   });
 });
