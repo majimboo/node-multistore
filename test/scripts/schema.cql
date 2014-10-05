@@ -4,7 +4,8 @@ CREATE KEYSPACE IF NOT EXISTS medintegrate
 USE medintegrate;
 
 -- create transaction_logs
-CREATE TABLE transaction_logs (
+CREATE TABLE transaction_logs
+(
   channel_id text,
   date text,
   event_id timeuuid,

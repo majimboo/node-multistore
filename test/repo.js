@@ -17,6 +17,13 @@ var repo = new Repo({
     host:     'amqp://localhost',
     key:      'export',
     exchange: 'caresharing.medintegrate'
+  },
+  mysql: {
+    on: 'create',
+    connectionLimit: 10,
+    host: 'localhost',
+    user: 'root',
+    database: 'medintegrate'
   }
 });
 
@@ -41,14 +48,11 @@ describe('Repo', function () {
         recipient_id:     { type: 'text',     required: true },
         data_id:          { type: 'text',     required: true },
         event_status:     { type: 'text',     required: true }
-      }
-      /** , {
-        amqp: {
-          key: 'export',
-          exchange: 'caresharing.medintegrate'
+      }, {
+        mysql: {
+          table: 'txl'
         }
-      } **/
-      );
+      });
 
       Transaction.should.be.an.instanceof(Object);
       done();
@@ -100,6 +104,10 @@ describe('Model', function () {
         recipient_id:     { type: 'text',     required: true },
         data_id:          { type: 'text',     required: true },
         event_status:     { type: 'text',     required: true }
+      }, {
+        mysql: {
+          table: 'txl'
+        }
       });
 
       var transaction = {

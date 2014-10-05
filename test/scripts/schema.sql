@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS medintegrate;
+
+USE medintegrate;
+
+CREATE TABLE txl
+(
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  txn_id VARCHAR(36) NOT NULL,
+  channel_id TEXT NOT NULL,
+
+  PRIMARY KEY (id),
+  UNIQUE KEY txn_id (txn_id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

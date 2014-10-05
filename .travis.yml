@@ -6,10 +6,12 @@ node_js:
 services:
   - cassandra
   - rabbitmq
+  - mysql
 
 before_script:
   - sudo pip install cqlsh
-  - cqlsh -f test/schema.cql
+  - cqlsh -f test/scripts/schema.cql
   - sudo curl -o /usr/local/bin/rabbitmqadmin http://localhost:15672/cli/rabbitmqadmin
   - sudo chmod +x /usr/local/bin/rabbitmqadmin
   - rabbitmqadmin declare exchange name=caresharing.medintegrate type=direct durable=true
+  - mysql -u root < test/scripts/schema.sql
