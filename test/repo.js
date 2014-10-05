@@ -106,7 +106,10 @@ describe('Model', function () {
         event_status:     { type: 'text',     required: true }
       }, {
         mysql: {
-          table: 'txl'
+          table: 'txl',
+          mapping: {
+            transaction_id: 'txn_id'
+          }
         }
       });
 
