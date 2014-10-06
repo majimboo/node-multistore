@@ -3,6 +3,11 @@ MultiStore [![Build Status](https://travis-ci.org/majimboo/node-multistore.svg?b
 
 Simple Node.JS O[R/D]M.
 
+Testing
+-------
+
+- [Repo Test](https://github.com/majimboo/node-multistore/blob/master/test/repo.js)
+
 Example
 -------
 
@@ -11,35 +16,32 @@ Example
     // ordering gives priority. In this configuration cassandra
     // is the highest priority. If cassandra fails, the lower
     // priorities does not execute.
-    var store = new Store({
+    var db = new Store({
       cassandra: {
-        contacts: ['localhost'],
-        keyspace: 'medintegrate'
+        on            : 'create',
+        contactPoints : ['localhost'],
+        keyspace      : 'medintegrate'
       },
       amqp: {
-        host: 'amqp://localhost',
+        after    : 'create',
+        host     : 'amqp://localhost',
         // will act as default ex and key if no schema options are given
-        exchange: 'default',
-        key: 'default'
+        exchange : 'default',
+        key      : 'default'
       },
       mysql: {
-        database: 'medintegrate',
-        // will act as default table if no schema options are given
-        table: 'transactions'
+        on              : 'create',
+        connectionLimit : 10,
+        host            : 'localhost',
+        user            : 'root',
+        database        : 'medintegrate'
       }
     });
 
     // load all adapters
-    // accepts an optional first parameter as additional options
-    store.init({
-      // inserts to both adapters
-      adapters: ['cassandra', 'mysql'],
-      // this adapter acts like a callback
-      callback: ['rabbitmq']
-    }, done_callback);
+    db.init(callback);
 
-    // define a schema
-    store.schema('transaction_logs', {
+    var schema = {
       channel_id:       { type: 'text',     required: true },
       date:             { type: 'text',     required: true },
       event_id:         { type: 'timeuuid', required: true },
@@ -51,13 +53,27 @@ Example
       recipient_id:     { type: 'text',     required: true },
       data_id:          { type: 'text',     required: true },
       event_status:     { type: 'text',     required: true }
-    }, {
+    };
+
+    // this defines a universal schema that conforms to each adapter.
+    // there is also an option to create a schema for a specific adapter
+    // Example:
+    //   db.cassanda.schema('Transactions'...
+    TransactionSchema = db.schema('transaction_logs', schema, {
       // including optional adapter specific options
       // if included here it modifies how all insert or actions behave
       cassandra: { table: 'transaction_logs' },
-      mysql: { ignore: ['sender_id'], table: 'transactions' },
+      mysql: {
+        table: 'transactions',
+        mapping: {
+          txn_id: 'transaction_id'
+        }
+      },
       amqp: { exchange: 'myexchange', key: 'mykey' }
     });
+
+    // define a model
+    var Transaction = db.model('Transaction', [TransactionSchema]);
 
     // if a required field is missing it throws an error
     var transaction = {
@@ -72,17 +88,13 @@ Example
       recipient_id:     chance.word(),
       data_id:          chance.word(),
       event_status:     chance.word(),
-      i_get_ignored:   'because I am not defined in store.schema()' // wont be inserted
+      i_get_ignored:   'because I am not defined in db.schema()' // wont be inserted
     }
-
-    // insert to all active adapters
-    // in this case: cassandra then amqp
-    store.insert('transaction_logs', transaction, done_callback);
 
     // insert to specific adapter
     // if 2nd argument is an array, it gets inserted in batch
     // if its an object it gets inserted with execute prepared.
-    store.cassandra.insert('transaction_logs', transaction, done_callback);
+    db.cassandra.insert('transaction_logs', transaction, done_callback);
 
     // including optional adapter specific options
     // if included here it modifies how each insert or actions behave
@@ -93,4 +105,5 @@ Example
       }
     };
 
-    repo.insert('transaction_logs', transaction, options, done);
+    // inserts to this model
+    Transaction.create(transaction, options, done);
