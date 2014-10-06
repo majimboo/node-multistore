@@ -41,6 +41,7 @@ Example
     // load all adapters
     db.init(callback);
 
+    // if a required field is missing schema throws an error
     var schema = {
       channel_id:       { type: 'text',     required: true },
       date:             { type: 'text',     required: true },
@@ -75,7 +76,6 @@ Example
     // define a model
     var Transaction = db.model('Transaction', [TransactionSchema]);
 
-    // if a required field is missing it throws an error
     var transaction = {
       channel_id:       chance.word(),
       date:             chance.date({string: true}),
@@ -96,8 +96,7 @@ Example
     // if its an object it gets inserted with execute prepared.
     db.cassandra.insert('transaction_logs', transaction, done_callback);
 
-    // including optional adapter specific options
-    // if included here it modifies how each insert or actions behave
+    // if included, it modifies how each insert or actions behave
     var options = {
       amqp: {
         key: 'export',
@@ -105,5 +104,9 @@ Example
       }
     };
 
-    // inserts to this model
+    // inserts to all schema/adapters given to model
+    // in this case it is:
+    //    - create: cassandra
+    //    - create: mysql
+    //    - afterCreate: amqp
     Transaction.create(transaction, options, done);
