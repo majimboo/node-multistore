@@ -16,7 +16,7 @@ var db = new Repo({
   amqp: {
     after:    'create',
     host:     'amqp://localhost',
-    key:      'export',
+    key:      'caresharing.medsafe.export',
     exchange: 'caresharing.medintegrate'
   },
   mysql: {
@@ -74,7 +74,7 @@ describe('Repo', function () {
 
 describe('Model', function () {
   describe('#create', function () {
-    it('should work as expected with model syntax', function (done) {
+    it('should insert to all database specified', function (done) {
 
       // cassandra inserts
       var CaTransaction = db.cassandra.schema('Transaction', {
@@ -104,7 +104,26 @@ describe('Model', function () {
         }
       });
 
-      var Transaction = db.model('Transaction', [CaTransaction, MyTransaction]);
+      // afterCreate rabbit insert
+      var MqTransaction = db.amqp.schema('Transaction', {
+        channel_id:       { type: 'text',     required: true },
+        date:             { type: 'text',     required: true },
+        event_id:         { type: 'timeuuid', required: true },
+        transaction_id:   { type: 'uuid',     required: true },
+        source_system_id: { type: 'text',     required: true },
+        target_system_id: { type: 'text',     required: true },
+        subject_id:       { type: 'text',     required: true },
+        sender_id:        { type: 'text',     required: true },
+        recipient_id:     { type: 'text',     required: true },
+        data_id:          { type: 'text',     required: true },
+        event_status:     { type: 'text',     required: true }
+      });
+
+      var Transaction = db.model('Transaction', [
+                                                  CaTransaction,
+                                                  MyTransaction,
+                                                  MqTransaction
+                                                ]);
 
       var transaction = {
         channel_id:       chance.word(),
