@@ -9,7 +9,7 @@ var Repo = require('../');
 
 var db = new Repo({
   cassandra: {
-    on: 'create',
+    on:            'create',
     contactPoints: ['localhost'],
     keyspace:      'medintegrate'
   },
@@ -20,11 +20,11 @@ var db = new Repo({
     exchange: 'caresharing.medintegrate'
   },
   mysql: {
-    on: 'create',
+    on:              'create',
     connectionLimit: 10,
-    host: 'localhost',
-    user: 'root',
-    database: 'medintegrate'
+    host:            'localhost',
+    user:            'root',
+    database:        'medintegrate'
   }
 });
 
