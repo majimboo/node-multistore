@@ -95,10 +95,13 @@ describe('Model', function () {
 
       // mysql inserts
       var MyTransaction = db.mysql.schema('Transaction', {
-        channel_id:     { type: 'text', required: true },
-        transaction_id: { type: 'uuid', required: true }
+        channel_id: { type: 'text', required: true },
+        txn_id:     { type: 'uuid', required: true }
       }, {
-        table: 'txl'
+        table: 'txl',
+        mapping: {
+          txn_id: 'transaction_id'
+        }
       });
 
       var Transaction = db.model('Transaction', [CaTransaction, MyTransaction]);
