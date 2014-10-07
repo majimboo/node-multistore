@@ -37,6 +37,14 @@ var FETCH_DATA_POINT_CUTOFF_QUERY =
   ' AND available_at = ?' +
   ' AND uid = ?';
 
+function toUpperCase(value) {
+  return value.toUpperCase();
+}
+
+function toLowerCase(value) {
+  return value.toLowerCase();
+}
+
 module.exports = {
   getModel: function () {
     var db = require('../../');
@@ -45,17 +53,17 @@ module.exports = {
       system_id: {
         type: 'text',
         required: true,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       uid: {
         type: 'text',
         required: true,
-        morph: 'toLowerCase'
+        morph: toLowerCase
       },
       code: {
         type: 'text',
         required: true,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       journal_id: {
         type: 'timeuuid',
@@ -64,17 +72,17 @@ module.exports = {
       set_id: {
         type: 'text',
         required: true,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       sequence_id: {
         type: 'text',
         default: '',
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       data_type: {
         type: 'text',
         required: false,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       value: 'text',
       attributes: 'map',
@@ -107,12 +115,12 @@ module.exports = {
       uid: {
         type: 'text',
         required: true,
-        morph: 'toLowerCase'
+        morph: toLowerCase
       },
       system_id: {
         type: 'text',
         required: true,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       created_at: {
         type: 'timestamp',
@@ -127,12 +135,12 @@ module.exports = {
       system_id: {
         type: 'text',
         required: true,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       uid: {
         type: 'text',
         required: true,
-        morph: 'toLowerCase'
+        morph: toLowerCase
       },
       set_id: {
         type: 'text',
@@ -141,12 +149,12 @@ module.exports = {
       code: {
         type: 'text',
         required: true,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       sequence_id: {
         type: 'text',
         default: '',
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       journal_id: {
         type: 'timeuuid',
@@ -160,12 +168,12 @@ module.exports = {
       system_id: {
         type: 'text',
         required: true,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       code: {
         type: 'text',
         required: true,
-        morph: 'toUpperCase'
+        morph: toUpperCase
       },
       available_at: {
         type: 'text',
