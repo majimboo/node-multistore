@@ -12,7 +12,8 @@ Testing
 Example
 -------
 
-    var db = require('../../');
+    var db     = require('multistore');
+    var moment = require('moment');
 
     function toUpperCase(value) {
       return value.toUpperCase();
