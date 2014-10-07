@@ -14,6 +14,18 @@ Example
 
     var db = require('../../');
 
+    function toUpperCase(value) {
+      return value.toUpperCase();
+    }
+
+    function toLowerCase(value) {
+      return value.toLowerCase();
+    }
+
+    function getTime(value) {
+      return moment(value).valueOf();
+    }
+
     db.init({
       cassandra: {
         on: 'create',
