@@ -6,8 +6,8 @@ var moment = require('moment');
 var cassandra = require('cassandra-driver');
 
 var cassandraClient = new cassandra.Client({
-  contactPoints : ['127.0.0.1'],
-  keyspace      : 'medsafe'
+  contactPoints: ['localhost'],
+  keyspace:      'medsafe'
 });
 
 // queries
@@ -43,60 +43,60 @@ module.exports = {
 
     var DataPoints = db.cassandra.schema('DataPoints', {
       system_id: {
-        type     : 'text',
-        required : true,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: true,
+        morph: 'toUpperCase'
       },
       uid: {
-        type     : 'text',
-        required : true,
-        morph    : 'toLowerCase'
+        type: 'text',
+        required: true,
+        morph: 'toLowerCase'
       },
       code: {
-        type     : 'text',
-        required : true,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: true,
+        morph: 'toUpperCase'
       },
       journal_id: {
-        type    : 'timeuuid',
-        default : uuid.v1
+        type: 'timeuuid',
+        default: uuid.v1
       },
       set_id: {
-        type     : 'text',
-        required : true,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: true,
+        morph: 'toUpperCase'
       },
       sequence_id: {
-        type    : 'text',
-        default : '',
-        morph   : 'toUpperCase'
+        type: 'text',
+        default: '',
+        morph: 'toUpperCase'
       },
       data_type: {
-        type     : 'text',
-        required : false ,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: false,
+        morph: 'toUpperCase'
       },
-      value      : 'text',
-      attributes : 'map',
-      source     : 'map',
-      applied_at : {
-        type  : 'timestamp',
-        morph : 'valueOf',
-        wrap  : moment
+      value: 'text',
+      attributes: 'map',
+      source: 'map',
+      applied_at: {
+        type: 'timestamp',
+        morph: 'valueOf',
+        wrap: moment
       },
-      applied_status : {
-        type     : 'text',
-        required : true
+      applied_status: {
+        type: 'text',
+        required: true
       },
-      available_at   : {
-        type  : 'timestamp',
-        morph : 'valueOf',
-        wrap  : moment
+      available_at: {
+        type: 'timestamp',
+        morph: 'valueOf',
+        wrap: moment
       },
-      translated_at  : {
-        type  : 'timestamp',
-        morph : 'valueOf',
-        wrap  : moment
+      translated_at: {
+        type: 'timestamp',
+        morph: 'valueOf',
+        wrap: moment
       },
       deleted: 'boolean'
     }, {
@@ -105,48 +105,51 @@ module.exports = {
 
     var Profiles = db.cassandra.schema('Profiles', {
       uid: {
-        type     : 'text',
-        required : true,
-        morph    : 'toLowerCase'
+        type: 'text',
+        required: true,
+        morph: 'toLowerCase'
       },
       system_id: {
-        type     : 'text',
-        required : true,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: true,
+        morph: 'toUpperCase'
       },
-      created_at   : { type : 'timestamp', default  : Date.now }
+      created_at: {
+        type: 'timestamp',
+        default: Date.now
+      }
     }, {
       table: 'profiles'
     });
 
     var DataPointsBySet = db.cassandra.schema('DataPointsBySet', {
       system_id: {
-        type     : 'text',
-        required : true,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: true,
+        morph: 'toUpperCase'
       },
       uid: {
-        type     : 'text',
-        required : true,
-        morph    : 'toLowerCase'
+        type: 'text',
+        required: true,
+        morph: 'toLowerCase'
       },
       set_id: {
-        type : 'text',
-        required : true
+        type: 'text',
+        required: true
       },
       code: {
-        type     : 'text',
-        required : true,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: true,
+        morph: 'toUpperCase'
       },
       sequence_id: {
-        type    : 'text',
-        default : '',
-        morph   : 'toUpperCase'
+        type: 'text',
+        default: '',
+        morph: 'toUpperCase'
       },
       journal_id: {
-        type    : 'timeuuid',
-        default : uuid.v1
+        type: 'timeuuid',
+        default: uuid.v1
       }
     }, {
       table: 'data_points_by_set'
@@ -154,22 +157,22 @@ module.exports = {
 
     var DataPointsByCutoff = db.cassandra.schema('DataPointsByCutoff', {
       system_id: {
-        type     : 'text',
-        required : true,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: true,
+        morph: 'toUpperCase'
       },
       code: {
-        type     : 'text',
-        required : true,
-        morph    : 'toUpperCase'
+        type: 'text',
+        required: true,
+        morph: 'toUpperCase'
       },
-      available_at : {
-        type     : 'text',
-        required : true
+      available_at: {
+        type: 'text',
+        required: true
       },
       uid: {
-        type     : 'text',
-        required : true
+        type: 'text',
+        required: true
       }
     }, {
       table: 'data_points_by_cutoff'
@@ -221,29 +224,29 @@ module.exports = {
       attrs[chance.word()] = chance.word();
 
       source = {
-        system_id    : (options.system_id || chance.word()).toUpperCase(),
-        journal_id   : uuid.v1(),
-        uid          : (options.uid || uuid.v4()).toLowerCase(),
-        data_type    : chance.word().toUpperCase(),
-        code         : (options.code || chance.word()).toUpperCase()
+        system_id:  (options.system_id || chance.word()).toUpperCase(),
+        journal_id: uuid.v1(),
+        uid:        (options.uid || uuid.v4()).toLowerCase(),
+        data_type:  chance.word().toUpperCase(),
+        code:       (options.code || chance.word()).toUpperCase()
       };
 
       dataPoints.push({
-        system_id      : source.system_id,
-        uid            : source.uid,
-        journal_id     : source.journal_id,
-        data_type      : source.data_type,
-        sequence_id    : chance.word().toUpperCase(),
-        code           : source.code,
-        value          : chance.word(),
-        attributes     : attrs,
-        source         : source,
-        applied_at     : chance.date({year: 2013}),
-        applied_status : options.applied_list || chance.pick(appliedStatuses),
-        deleted        : false,
-        set_id         : (options.set_id || chance.word()).toUpperCase(),
-        available_at   : chance.date({year: 2013}),
-        translated_at  : chance.date({year: 2013})
+        system_id:      source.system_id,
+        uid:            source.uid,
+        journal_id:     source.journal_id,
+        data_type:      source.data_type,
+        sequence_id:    chance.word().toUpperCase(),
+        code:           source.code,
+        value:          chance.word(),
+        attributes:     attrs,
+        source:         source,
+        applied_at:     chance.date({year: 2013}),
+        applied_status: options.applied_list || chance.pick(appliedStatuses),
+        deleted:        false,
+        set_id:         (options.set_id || chance.word()).toUpperCase(),
+        available_at:   chance.date({year: 2013}),
+        translated_at:  chance.date({year: 2013})
       });
     }
 
