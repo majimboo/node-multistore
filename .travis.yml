@@ -10,10 +10,5 @@ services:
 
 before_script:
   - sudo pip install cqlsh
-  - cqlsh -f test/scripts/medint.cql
-  - cqlsh -f test/scripts/medsafe.cql
   - sudo curl -o /usr/local/bin/rabbitmqadmin http://localhost:15672/cli/rabbitmqadmin
   - sudo chmod +x /usr/local/bin/rabbitmqadmin
-  - rabbitmqadmin declare exchange name=caresharing.medintegrate type=direct durable=true
-  - mysql -u root < test/scripts/medint.sql
-  - mysql -u root < test/scripts/medsafe.sql

@@ -2,6 +2,7 @@ CREATE DATABASE IF NOT EXISTS medintegrate;
 
 USE medintegrate;
 
+DROP TABLE IF EXISTS txl;
 CREATE TABLE txl
 (
   id INT(11) NOT NULL AUTO_INCREMENT,

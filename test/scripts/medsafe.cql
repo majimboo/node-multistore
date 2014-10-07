@@ -1,16 +1,22 @@
-create keyspace medsafe
+CREATE KEYSPACE IF NOT EXISTS medsafe
   with replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
-use medsafe;
+USE medsafe;
 
-create table profiles (
+-- delete table if exist
+DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS data_points;
+DROP TABLE IF EXISTS data_points_by_set;
+DROP TABLE IF EXISTS data_points_by_cutoff;
+
+CREATE TABLE profiles (
   uid text,
   system_id text,
   created_at timestamp,
-  primary key (uid, system_id)
+  primary key ((uid, system_id))
 );
 
-create table data_points (
+CREATE TABLE data_points (
   system_id text,
   uid text,
   code text,
@@ -29,7 +35,7 @@ create table data_points (
   primary key ((system_id, uid), code, journal_id)
 );
 
-create table data_points_by_set (
+CREATE TABLE data_points_by_set (
   system_id text,
   uid text,
   set_id text,
@@ -39,7 +45,7 @@ create table data_points_by_set (
   primary key ((system_id, uid, set_id), code, sequence_id)
 );
 
-create table data_points_by_cutoff (
+CREATE TABLE data_points_by_cutoff (
   system_id text,
   code text,
   available_at timestamp,

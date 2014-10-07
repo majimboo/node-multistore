@@ -22,7 +22,7 @@
     "uuid": "^2.0.1"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "make test"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,10 @@
-CREATE KEYSPACE medintegrate
+CREATE KEYSPACE IF NOT EXISTS medintegrate
   WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
 USE medintegrate;
 
+-- delete table if exist
+DROP TABLE IF EXISTS transaction_logs;
 -- create transaction_logs
 CREATE TABLE transaction_logs
 (

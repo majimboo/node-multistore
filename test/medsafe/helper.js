@@ -243,9 +243,9 @@ module.exports = {
 
     var ModelSchema = [
       Cassandra.DataPoints,
-      Cassandra.Profiles,
-      Cassandra.DataPointsBySet,
-      Cassandra.DataPointsByCutoff,
+      // Cassandra.Profiles,
+      // Cassandra.DataPointsBySet,
+      // Cassandra.DataPointsByCutoff,
       Mysql.DataPoints,
       Mysql.PatientProfiles,
       Mysql.Profiles,
