@@ -6,107 +6,167 @@ Simple Node.JS O[R/D]M.
 Testing
 -------
 
-- [Repo Test](https://github.com/majimboo/node-multistore/blob/master/test/repo.js)
+- [Data Points](https://github.com/majimboo/node-multistore/blob/master/test/medsafe/datapoint.js)
+- [Data Point Schema](https://github.com/majimboo/node-multistore/blob/master/test/medsafe/helper.js)
 
 Example
 -------
 
-    var Store = require('multistore');
+    var db = require('../../');
 
-    // ordering gives priority. In this configuration cassandra
-    // is the highest priority. If cassandra fails, the lower
-    // priorities does not execute.
-    var db = new Store({
+    db.init({
       cassandra: {
-        on            : 'create',
-        contactPoints : ['localhost'],
-        keyspace      : 'medintegrate'
-      },
-      amqp: {
-        after    : 'create',
-        host     : 'amqp://localhost',
-        // will act as default ex and key if no schema options are given
-        exchange : 'default',
-        key      : 'default'
-      },
-      mysql: {
-        on              : 'create',
-        connectionLimit : 10,
-        host            : 'localhost',
-        user            : 'root',
-        database        : 'medintegrate'
+        on: 'create',
+        contactPoints: ['localhost'],
+        keyspace: 'medsafe'
       }
+    }, function (err) {
+      DataPoint = helper.getModel();
+      done(err);
     });
 
-    // load all adapters
-    db.init(callback);
-
-    // if a required field is missing schema throws an error
-    var schema = {
-      channel_id:       { type: 'text',     required: true },
-      date:             { type: 'text',     required: true },
-      event_id:         { type: 'timeuuid', required: true },
-      transaction_id:   { type: 'uuid',     required: true },
-      source_system_id: { type: 'text',     required: true },
-      target_system_id: { type: 'text',     required: true },
-      subject_id:       { type: 'text',     required: true },
-      sender_id:        { type: 'text',     required: true },
-      recipient_id:     { type: 'text',     required: true },
-      data_id:          { type: 'text',     required: true },
-      event_status:     { type: 'text',     required: true }
-    };
-
-    // this defines a universal schema that conforms to each adapter.
-    // there is also an option to create a schema for a specific adapter
-    // Example:
-    //   db.cassanda.schema('Transactions'...
-    TransactionSchema = db.schema('transaction_logs', schema, {
-      // including optional adapter specific options
-      // if included here it modifies how all insert or actions behave
-      cassandra: { table: 'transaction_logs' },
-      mysql: {
-        table: 'transactions',
-        mapping: {
-          txn_id: 'transaction_id'
-        }
+    var DataPoints = db.cassandra.schema('DataPoints', {
+      system_id: {
+        type: 'text',
+        required: true,
+        morph: toUpperCase
       },
-      amqp: { exchange: 'myexchange', key: 'mykey' }
+      uid: {
+        type: 'text',
+        required: true,
+        morph: toLowerCase
+      },
+      code: {
+        type: 'text',
+        required: true,
+        morph: toUpperCase
+      },
+      journal_id: {
+        type: 'timeuuid',
+        default: uuid.v1
+      },
+      set_id: {
+        type: 'text',
+        required: true,
+        morph: toUpperCase
+      },
+      sequence_id: {
+        type: 'text',
+        default: '',
+        morph: toUpperCase
+      },
+      data_type: {
+        type: 'text',
+        required: false,
+        morph: toUpperCase
+      },
+      value: 'text',
+      attributes: 'map',
+      source: 'map',
+      applied_at: {
+        type: 'timestamp',
+        morph: getTime
+      },
+      applied_status: {
+        type: 'text',
+        required: true
+      },
+      available_at: {
+        type: 'timestamp',
+        morph: getTime
+      },
+      translated_at: {
+        type: 'timestamp',
+        morph: getTime
+      },
+      deleted: 'boolean'
+    }, {
+      table: 'data_points'
     });
 
-    // define a model
-    var Transaction = db.model('Transaction', [TransactionSchema]);
-
-    var transaction = {
-      channel_id:       chance.word(),
-      date:             chance.date({string: true}),
-      event_id:         cassandra.types.timeuuid(),
-      transaction_id:   cassandra.types.uuid(),
-      source_system_id: chance.word(),
-      target_system_id: chance.word(),
-      subject_id:       chance.word(),
-      sender_id:        chance.word(),
-      recipient_id:     chance.word(),
-      data_id:          chance.word(),
-      event_status:     chance.word(),
-      i_get_ignored:   'because I am not defined in db.schema()' // wont be inserted
-    }
-
-    // insert to specific adapter
-    // if 2nd argument is an array, it gets inserted in batch
-    // if its an object it gets inserted with execute prepared.
-    db.cassandra.insert('transaction_logs', transaction, done_callback);
-
-    // if included, it modifies how each insert or actions behave
-    var options = {
-      amqp: {
-        key: 'export',
-        exchange: 'caresharing.medintegrate'
+    var Profiles = db.cassandra.schema('Profiles', {
+      uid: {
+        type: 'text',
+        required: true,
+        morph: toLowerCase
+      },
+      system_id: {
+        type: 'text',
+        required: true,
+        morph: toUpperCase
+      },
+      created_at: {
+        type: 'timestamp',
+        default: Date.now
       }
-    };
+    }, {
+      table: 'profiles',
+      condition: 'IF NOT EXISTS'
+    });
 
-    // inserts to all schema/adapters given to model
-    // in this case it is:
-    //    - create: cassandra
-    //    - create: mysql
-    //    - afterCreate: amqp
-    Transaction.create(transaction, options, done);
+    var DataPointsBySet = db.cassandra.schema('DataPointsBySet', {
+      system_id: {
+        type: 'text',
+        required: true,
+        morph: toUpperCase
+      },
+      uid: {
+        type: 'text',
+        required: true,
+        morph: toLowerCase
+      },
+      set_id: {
+        type: 'text',
+        required: true
+      },
+      code: {
+        type: 'text',
+        required: true,
+        morph: toUpperCase
+      },
+      sequence_id: {
+        type: 'text',
+        default: '',
+        morph: toUpperCase
+      },
+      journal_id: {
+        type: 'timeuuid',
+        default: uuid.v1
+      }
+    }, {
+      table: 'data_points_by_set'
+    });
+
+    var DataPointsByCutoff = db.cassandra.schema('DataPointsByCutoff', {
+      system_id: {
+        type: 'text',
+        required: true,
+        morph: toUpperCase
+      },
+      code: {
+        type: 'text',
+        required: true,
+        morph: toUpperCase
+      },
+      available_at: {
+        type: 'timestamp',
+        morph: getTime
+      },
+      uid: {
+        type: 'text',
+        required: true
+      }
+    }, {
+      table: 'data_points_by_cutoff'
+    });
+
+    var ModelSchema = [
+      DataPoints,
+      Profiles,
+      DataPointsBySet,
+      DataPointsByCutoff
+    ];
+
+    var DataPoint = db.model('DataPoint', ModelSchema);
+
+    DataPoint.create(dataPoint, done);
