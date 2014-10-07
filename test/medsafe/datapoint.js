@@ -4,7 +4,7 @@ var should = require('should');
 var repo   = require('../../');
 var helper = require('./helper');
 
-describe('DataPoint', function () {
+describe('medsafe/datapoint', function () {
   var DataPoint;
 
   before(function (done) {

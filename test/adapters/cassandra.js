@@ -1,31 +1,118 @@
 'use strict';
 
 var should = require('should');
+var uuid   = require('node-uuid');
 var chance = require('chance').Chance();
+var moment = require('moment');
 var cassandra = require('cassandra-driver');
 
 var repo = require('../../');
 
-repo.schema('transaction_logs', {
-  channel_id:       { type: 'text',     required: true },
-  date:             { type: 'text',     required: true },
-  event_id:         { type: 'timeuuid', required: true },
-  transaction_id:   { type: 'uuid',     required: true },
-  source_system_id: { type: 'text',     required: true },
-  target_system_id: { type: 'text',     required: true },
-  subject_id:       { type: 'text',     required: true },
-  sender_id:        { type: 'text',     required: true },
-  recipient_id:     { type: 'text',     required: true },
-  data_id:          { type: 'text',     required: true },
-  event_status:     { type: 'text',     required: true }
+function toUpperCase(value) {
+  return value.toUpperCase();
+}
+
+function toLowerCase(value) {
+  return value.toLowerCase();
+}
+
+function getTime(value) {
+  return moment(value).valueOf();
+}
+
+repo.schema('data_points', {
+  system_id: {
+    type: 'text',
+    required: true,
+    morph: toUpperCase
+  },
+  uid: {
+    type: 'text',
+    required: true,
+    morph: toLowerCase
+  },
+  code: {
+    type: 'text',
+    required: true,
+    morph: toUpperCase
+  },
+  journal_id: {
+    type: 'timeuuid',
+    default: uuid.v1
+  },
+  set_id: {
+    type: 'text',
+    required: true,
+    morph: toUpperCase
+  },
+  sequence_id: {
+    type: 'text',
+    default: '',
+    morph: toUpperCase
+  },
+  data_type: {
+    type: 'text',
+    required: false,
+    morph: toUpperCase
+  },
+  value: 'text',
+  attributes: 'map',
+  source: 'map',
+  applied_at: {
+    type: 'timestamp',
+    morph: getTime
+  },
+  applied_status: {
+    type: 'text',
+    required: true
+  },
+  available_at: {
+    type: 'timestamp',
+    morph: getTime
+  },
+  translated_at: {
+    type: 'timestamp',
+    morph: getTime
+  }
 });
+
+var attrs = {};
+attrs[chance.word()] = chance.word();
+attrs[chance.word()] = chance.word();
+attrs[chance.word()] = chance.word();
+
+var source = {
+  system_id:  chance.word().toUpperCase(),
+  journal_id: uuid.v1(),
+  uid:        uuid.v4().toLowerCase(),
+  data_type:  chance.word().toUpperCase(),
+  code:       chance.word().toUpperCase()
+};
+
+var dataPoint = {
+  system_id:      source.system_id,
+  uid:            source.uid,
+  journal_id:     source.journal_id,
+  data_type:      source.data_type,
+  sequence_id:    chance.word().toUpperCase(),
+  code:           source.code,
+  value:          chance.word(),
+  attributes:     attrs,
+  source:         source,
+  applied_at:     chance.date({year: 2013}),
+  applied_status: chance.pick(['', 'made', 'reported', 'prepared']),
+  deleted:        false,
+  set_id:         chance.word().toUpperCase(),
+  available_at:   chance.date({year: 2013}),
+  translated_at:  chance.date({year: 2013})
+};
 
 describe('adapters/cassandra', function () {
   before(function (done) {
     repo.init({
       cassandra: {
         contactPoints: ['localhost'],
-        keyspace: 'medintegrate'
+        keyspace: 'medsafe'
       }
     }, done);
   });
@@ -38,46 +125,64 @@ describe('adapters/cassandra', function () {
 
   describe('#insert', function () {
     it('receives a single transaction', function (done) {
-      var transaction = {
-        channel_id:       chance.word(),
-        date:             chance.date({string: true}),
-        event_id:         cassandra.types.timeuuid(),
-        transaction_id:   cassandra.types.uuid(),
-        source_system_id: chance.word(),
-        target_system_id: chance.word(),
-        subject_id:       chance.word(),
-        sender_id:        chance.word(),
-        recipient_id:     chance.word(),
-        data_id:          chance.word(),
-        event_status:     chance.word()
-      }
-
-      repo.cassandra.insert('transaction_logs', transaction)
+      repo.cassandra.insert('data_points', dataPoint)
         .then(done).catch(done);
     });
 
-    it('recieves multiple transactions', function(done) {
+    // https://datastax-oss.atlassian.net/browse/NODEJS-23
+    it('recieves multiple transactions'/**, function (done) {
       var count = 5;
-      var transactions = [];
+
+      var attrs      = {};
+      var source     = {};
+      var dataPoints = [];
 
       while (count--) {
-        transactions.push({
-          channel_id:       chance.word(),
-          date:             chance.date({string: true}),
-          event_id:         cassandra.types.timeuuid(),
-          transaction_id:   cassandra.types.uuid(),
-          source_system_id: chance.word(),
-          target_system_id: chance.word(),
-          subject_id:       chance.word(),
-          sender_id:        chance.word(),
-          recipient_id:     chance.word(),
-          data_id:          chance.word(),
-          event_status:     chance.word()
+        attrs = {};
+        attrs[chance.word()] = chance.word();
+        attrs[chance.word()] = chance.word();
+        attrs[chance.word()] = chance.word();
+
+        source = {
+          system_id:  chance.word().toUpperCase(),
+          journal_id: uuid.v1(),
+          uid:        uuid.v4().toLowerCase(),
+          data_type:  chance.word().toUpperCase(),
+          code:       chance.word().toUpperCase()
+        };
+
+        dataPoints.push({
+          system_id:      source.system_id,
+          uid:            source.uid,
+          journal_id:     source.journal_id,
+          data_type:      source.data_type,
+          sequence_id:    chance.word().toUpperCase(),
+          code:           source.code,
+          value:          chance.word(),
+          attributes:     attrs,
+          source:         source,
+          applied_at:     chance.date({year: 2013}),
+          applied_status: chance.pick(['', 'made', 'reported', 'prepared']),
+          deleted:        false,
+          set_id:         chance.word().toUpperCase(),
+          available_at:   chance.date({year: 2013}),
+          translated_at:  chance.date({year: 2013})
         });
       }
 
-      repo.cassandra.insert('transaction_logs', transactions)
+      repo.cassandra.insert('data_points', dataPoints)
         .then(done).catch(done);
+    }**/);
+  });
+
+  describe('#select', function () {
+    it('recieves an existing uid and system_id', function (done) {
+      var params = {
+        uid: dataPoint.uid,
+        system_id: dataPoint.system_id
+      };
+
+      repo.cassandra.select('data_points', params).then(done).catch(done);
     });
   });
 
