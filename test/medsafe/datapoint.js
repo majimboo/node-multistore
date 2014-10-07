@@ -17,9 +17,18 @@ describe('medsafe/datapoint', function () {
       mysql: {
         on:              'create',
         connectionLimit: 10,
-        host:            'localhost',
-        user:            'root',
-        database:        'medsafe'
+        operations: {
+          read: {
+            host:     'localhost',
+            user:     'root',
+            database: 'medsafe'
+          },
+          write: {
+            host:     'localhost',
+            user:     'root',
+            database: 'medsafe'
+          }
+        }
       }
     }, function (err) {
       DataPoint = helper.getModel();
