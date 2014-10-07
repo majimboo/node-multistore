@@ -45,6 +45,10 @@ function toLowerCase(value) {
   return value.toLowerCase();
 }
 
+function getTime(value) {
+  return moment(value).valueOf();
+}
+
 module.exports = {
   getModel: function () {
     var db = require('../../');
@@ -89,8 +93,7 @@ module.exports = {
       source: 'map',
       applied_at: {
         type: 'timestamp',
-        morph: 'valueOf',
-        wrap: moment
+        morph: getTime
       },
       applied_status: {
         type: 'text',
@@ -98,13 +101,11 @@ module.exports = {
       },
       available_at: {
         type: 'timestamp',
-        morph: 'valueOf',
-        wrap: moment
+        morph: getTime
       },
       translated_at: {
         type: 'timestamp',
-        morph: 'valueOf',
-        wrap: moment
+        morph: getTime
       },
       deleted: 'boolean'
     }, {
@@ -176,8 +177,8 @@ module.exports = {
         morph: toUpperCase
       },
       available_at: {
-        type: 'text',
-        required: true
+        type: 'timestamp',
+        morph: getTime
       },
       uid: {
         type: 'text',
