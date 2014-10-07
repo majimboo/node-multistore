@@ -9,10 +9,10 @@ describe('DataPoint', function () {
 
   before(function (done) {
     repo.init({
-      cassandra : {
-        on            : 'create',
-        contactPoints : ['127.0.0.1'],
-        keyspace      : 'medsafe'
+      cassandra: {
+        on: 'create',
+        contactPoints: ['127.0.0.1'],
+        keyspace: 'medsafe'
       }
     }, function (err) {
       DataPoint = helper.getModel();
