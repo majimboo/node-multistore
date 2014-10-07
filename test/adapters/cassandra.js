@@ -56,29 +56,29 @@ describe('adapters/cassandra', function () {
         .then(done).catch(done);
     });
 
-    // it('recieves multiple transactions', function(done) {
-    //   var count = 5;
-    //   var transactions = [];
+    it('recieves multiple transactions', function(done) {
+      var count = 5;
+      var transactions = [];
 
-    //   while (count--) {
-    //     transactions.push({
-    //       channel_id:       chance.word(),
-    //       date:             chance.date({string: true}),
-    //       event_id:         cassandra.types.timeuuid(),
-    //       transaction_id:   cassandra.types.uuid(),
-    //       source_system_id: chance.word(),
-    //       target_system_id: chance.word(),
-    //       subject_id:       chance.word(),
-    //       sender_id:        chance.word(),
-    //       recipient_id:     chance.word(),
-    //       data_id:          chance.word(),
-    //       event_status:     chance.word()
-    //     });
-    //   }
+      while (count--) {
+        transactions.push({
+          channel_id:       chance.word(),
+          date:             chance.date({string: true}),
+          event_id:         cassandra.types.timeuuid(),
+          transaction_id:   cassandra.types.uuid(),
+          source_system_id: chance.word(),
+          target_system_id: chance.word(),
+          subject_id:       chance.word(),
+          sender_id:        chance.word(),
+          recipient_id:     chance.word(),
+          data_id:          chance.word(),
+          event_status:     chance.word()
+        });
+      }
 
-    //   repo.cassandra.insert('transaction_logs', transactions)
-    //     .then(done).catch(done);
-    // });
+      repo.cassandra.insert('transaction_logs', transactions)
+        .then(done).catch(done);
+    });
   });
 
 });

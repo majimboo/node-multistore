@@ -9,7 +9,7 @@ CREATE TABLE transaction_logs
   channel_id text,
   date text,
   event_id timeuuid,
-  transaction_id text,
+  transaction_id uuid,
   source_system_id text,
   target_system_id text,
   subject_id text,
