@@ -13,6 +13,7 @@ Example
 -------
 
     var db     = require('multistore');
+    var uuid   = require('node-uuid');
     var moment = require('moment');
 
     function toUpperCase(value) {
@@ -23,7 +24,7 @@ Example
       return value.toLowerCase();
     }
 
-    function getTime(value) {
+    function toTime(value) {
       return moment(value).valueOf();
     }
 
@@ -75,7 +76,7 @@ Example
       source: 'map',
       applied_at: {
         type: 'timestamp',
-        morph: getTime
+        morph: toTime
       },
       applied_status: {
         type: 'text',
@@ -83,11 +84,11 @@ Example
       },
       available_at: {
         type: 'timestamp',
-        morph: getTime
+        morph: toTime
       },
       translated_at: {
         type: 'timestamp',
-        morph: getTime
+        morph: toTime
       },
       deleted: 'boolean'
     }, {
@@ -160,7 +161,7 @@ Example
       },
       available_at: {
         type: 'timestamp',
-        morph: getTime
+        morph: toTime
       },
       uid: {
         type: 'text',
