@@ -1,5 +1,6 @@
 'use strict';
 
+var _      = require('lodash');
 var uuid   = require('node-uuid');
 var chance = require('chance').Chance();
 var moment = require('moment');
@@ -197,7 +198,7 @@ module.exports = {
       DataPoints: db.mysql.schema('DataPoints', {
         code: 'text'
       }, {
-        table: 'data_points_0',
+        table: 'data_points_0'
       }),
 
       PatientProfiles: db.mysql.schema('PatientProfiles', {
@@ -224,7 +225,19 @@ module.exports = {
         key: 'text',
         value: 'text'
       }, {
-        table: 'attributes'
+        table: 'attributes',
+        mapping: {
+          key: 'attributes',
+          value: 'attributes'
+        },
+        bulk: true,
+        factory: function (data) {
+          var attr = [];
+          _.each(data, function (value, key) {
+            attr.push([key, value]);
+          });
+          return attr;
+        }
       })
     };
 
@@ -235,8 +248,8 @@ module.exports = {
       Cassandra.DataPointsByCutoff,
       Mysql.DataPoints,
       Mysql.PatientProfiles,
-      Mysql.Profiles
-      // Mysql.Attributes
+      Mysql.Profiles,
+      Mysql.Attributes
     ];
 
     return db.model('DataPoints', ModelSchema);
