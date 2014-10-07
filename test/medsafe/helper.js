@@ -119,7 +119,8 @@ module.exports = {
         default: Date.now
       }
     }, {
-      table: 'profiles'
+      table: 'profiles',
+      condition: 'IF NOT EXISTS'
     });
 
     var DataPointsBySet = db.cassandra.schema('DataPointsBySet', {
