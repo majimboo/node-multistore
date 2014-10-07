@@ -4,14 +4,7 @@ var should = require('should');
 var chance = require('chance').Chance();
 var cassandra = require('cassandra-driver');
 
-var Repo = require('../../');
-
-var repo = new Repo({
-  cassandra: {
-    contactPoints: ['localhost'],
-    keyspace: 'medintegrate'
-  }
-});
+var repo = require('../../');
 
 repo.schema('transaction_logs', {
   channel_id:       { type: 'text',     required: true },
@@ -29,7 +22,12 @@ repo.schema('transaction_logs', {
 
 describe('adapters/cassandra', function () {
   before(function (done) {
-    repo.init(done);
+    repo.init({
+      cassandra: {
+        contactPoints: ['localhost'],
+        keyspace: 'medintegrate'
+      }
+    }, done);
   });
 
   describe('#connect', function () {

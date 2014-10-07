@@ -16,7 +16,10 @@
   "devDependencies": {
     "chance": "^0.6.1",
     "mocha": "^1.21.4",
-    "should": "^4.0.4"
+    "moment": "^2.8.3",
+    "node-uuid": "^1.4.1",
+    "should": "^4.0.4",
+    "uuid": "^2.0.1"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha"

@@ -4,12 +4,7 @@ var should = require('should');
 var chance = require('chance').Chance();
 var cassandra = require('cassandra-driver');
 
-var Repo = require('../../');
-var repo = new Repo({
-  amqp: {
-    host: 'amqp://localhost'
-  }
-});
+var repo = require('../../');
 
 repo.schema('transaction_logs', {
   channel_id:       { type: 'text',     required: true },
@@ -27,7 +22,11 @@ repo.schema('transaction_logs', {
 
 describe('adapters/amqp', function () {
   before(function (done) {
-    repo.init(done);
+    repo.init({
+      amqp: {
+        host: 'amqp://localhost'
+      }
+    }, done);
   });
 
   describe('#connect', function () {

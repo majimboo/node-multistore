@@ -5,35 +5,33 @@ var chance = require('chance').Chance();
 var cassandra = require('cassandra-driver');
 var Model = require('../lib/model');
 
-var Repo = require('../');
-
-var db = new Repo({
-  cassandra: {
-    on:            'create',
-    contactPoints: ['localhost'],
-    keyspace:      'medintegrate'
-  },
-  amqp: {
-    after:    'create',
-    host:     'amqp://localhost',
-    key:      'caresharing.medsafe.export',
-    exchange: 'caresharing.medintegrate'
-  },
-  mysql: {
-    on:              'create',
-    connectionLimit: 10,
-    host:            'localhost',
-    user:            'root',
-    database:        'medintegrate'
-  }
-});
+var db = require('../');
 
 describe('Repo', function () {
   var TransactionSchema;
 
   describe('#init', function () {
     it('should load all enabled adapters', function (done) {
-      db.init(done);
+      db.init({
+        cassandra: {
+          on:            'create',
+          contactPoints: ['localhost'],
+          keyspace:      'medintegrate'
+        },
+        amqp: {
+          after:    'create',
+          host:     'amqp://localhost',
+          key:      'caresharing.medsafe.export',
+          exchange: 'caresharing.medintegrate'
+        },
+        mysql: {
+          on:              'create',
+          connectionLimit: 10,
+          host:            'localhost',
+          user:            'root',
+          database:        'medintegrate'
+        }
+      }, done);
     });
   });
 
