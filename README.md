@@ -20,10 +20,7 @@ Example
         contactPoints: ['localhost'],
         keyspace: 'medsafe'
       }
-    }, function (err) {
-      DataPoint = helper.getModel();
-      done(err);
-    });
+    }, done);
 
     var DataPoints = db.cassandra.schema('DataPoints', {
       system_id: {
