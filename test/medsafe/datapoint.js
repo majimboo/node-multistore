@@ -11,7 +11,7 @@ describe('DataPoint', function () {
     repo.init({
       cassandra: {
         on: 'create',
-        contactPoints: ['127.0.0.1'],
+        contactPoints: ['localhost'],
         keyspace: 'medsafe'
       }
     }, function (err) {

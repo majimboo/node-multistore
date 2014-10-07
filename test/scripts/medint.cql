@@ -1,4 +1,4 @@
-CREATE KEYSPACE IF NOT EXISTS medintegrate
+CREATE KEYSPACE medintegrate
   WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
 USE medintegrate;

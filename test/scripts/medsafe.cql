@@ -1,4 +1,5 @@
-create keyspace medsafe with replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+create keyspace medsafe
+  with replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
 use medsafe;
 
