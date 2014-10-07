@@ -13,6 +13,13 @@ describe('DataPoint', function () {
         on: 'create',
         contactPoints: ['localhost'],
         keyspace: 'medsafe'
+      },
+      mysql: {
+        on:              'create',
+        connectionLimit: 10,
+        host:            'localhost',
+        user:            'root',
+        database:        'medsafe'
       }
     }, function (err) {
       DataPoint = helper.getModel();
@@ -121,6 +128,11 @@ describe('DataPoint', function () {
         done();
       });
     });
+
+    it('inserts to mysql:data_points_0');
+    it('inserts to mysql:patient_profile');
+    it('inserts to mysql:profiles');
+    it('inserts to mysql:attributes');
 
   });
 
