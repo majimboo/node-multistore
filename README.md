@@ -34,6 +34,22 @@ Example
         on: 'create',
         contactPoints: ['localhost'],
         keyspace: 'medsafe'
+      },
+      mysql: {
+        on: 'create',
+        connectionLimit: 10,
+        operations: {
+          read: {
+            host:     'localhost',
+            user:     'root',
+            database: 'medsafe'
+          },
+          write: {
+            host:     'localhost',
+            user:     'root',
+            database: 'medsafe'
+          }
+        }
       }
     }, done);
 
