@@ -109,7 +109,8 @@ module.exports = {
       },
       deleted: 'boolean'
     }, {
-      table: 'data_points'
+      table: 'data_points',
+      batch: 'one'
     });
 
     var Profiles = db.cassandra.schema('Profiles', {
@@ -162,7 +163,8 @@ module.exports = {
         default: uuid.v1
       }
     }, {
-      table: 'data_points_by_set'
+      table: 'data_points_by_set',
+      batch: 'one'
     });
 
     var DataPointsByCutoff = db.cassandra.schema('DataPointsByCutoff', {
@@ -185,7 +187,8 @@ module.exports = {
         required: true
       }
     }, {
-      table: 'data_points_by_cutoff'
+      table: 'data_points_by_cutoff',
+      batch: 'one'
     });
 
     var ModelSchema = [
