@@ -73,7 +73,8 @@ repo.schema('data_points', {
   translated_at: {
     type: 'timestamp',
     morph: getTime
-  }
+  },
+  deleted: 'boolean'
 });
 
 var attrs = {};
@@ -176,13 +177,42 @@ describe('adapters/cassandra', function () {
   });
 
   describe('#select', function () {
+    it('recieves no parameters', function (done) {
+      repo.cassandra.select('data_points').then(function (results) {
+        results.rows.should.be.an.instanceof(Array);
+        done();
+      }).catch(done);
+    })
+
     it('recieves an existing uid and system_id', function (done) {
       var params = {
         uid: dataPoint.uid,
         system_id: dataPoint.system_id
       };
 
-      repo.cassandra.select('data_points', params).then(done).catch(done);
+      repo.cassandra.select('data_points', params).then(function (results) {
+        var result = results.rows[0];
+
+        // some items not validated. recheck
+        result.system_id.should.equal(dataPoint.system_id);
+        result.uid.should.equal(dataPoint.uid);
+        result.code.should.equal(dataPoint.code);
+        result.set_id.should.equal(dataPoint.set_id);
+        result.sequence_id.should.equal(dataPoint.sequence_id);
+        result.data_type.should.equal(dataPoint.data_type);
+        result.value.should.equal(dataPoint.value);
+        result.applied_at.should.eql(dataPoint.applied_at);
+        result.applied_status.should.equal(dataPoint.applied_status);
+        result.available_at.should.eql(dataPoint.available_at);
+        result.translated_at.should.eql(dataPoint.translated_at);
+        result.deleted.should.equal(dataPoint.deleted);
+
+        // attributes
+        result.attributes.should.eql(dataPoint.attributes);
+        // source
+        result.source.should.eql(dataPoint.source);
+        done();
+      }).catch(done);
     });
   });
 
