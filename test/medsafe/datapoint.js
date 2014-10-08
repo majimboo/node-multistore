@@ -178,8 +178,8 @@ describe('medsafe/datapoint', function () {
     });
   });
 
-  describe('#findAll', function () {
-    var dataPoint = helper.generateDataPoints(2);
+  describe('#find', function () {
+    var dataPoint = helper.generateDataPoints(1)[0];
 
     before(function (done) {
       DataPoint.create(purr.pack(dataPoint), done);
@@ -187,23 +187,14 @@ describe('medsafe/datapoint', function () {
 
     describe('receives no params', function () {
       it('returns all data points', function (done) {
-        DataPoint.findAll(function (err, result) {
+        DataPoint.find(function (err, result) {
           if (err) return done(err);
 
           // 11 at this point
-          result.rows.should.have.lengthOf(11);
+          result.rows.should.have.lengthOf(10);
           done();
         });
       });
-    });
-
-  });
-
-  describe('#find', function () {
-    var dataPoint = helper.generateDataPoints(1)[0];
-
-    before(function (done) {
-      DataPoint.create(purr.pack(dataPoint), done);
     });
 
     describe('receives a valid uid and system_id', function () {

@@ -257,8 +257,7 @@ module.exports = {
     var options = {
       unpack: purr.unpack,
       methods: {
-        findAll:   Cassandra.DataPoints,
-        find:      Cassandra.DataPoints
+        find: Cassandra.DataPoints
       }
     };
 

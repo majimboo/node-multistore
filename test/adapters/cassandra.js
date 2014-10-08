@@ -136,8 +136,8 @@ describe('adapters/cassandra', function () {
     it('recieves multiple transactions', function (done) {
       var count = 5;
 
-      var attrs      = {};
-      var source     = {};
+      var attrs  = {};
+      var source = {};
 
       while (count--) {
         attrs = {};
