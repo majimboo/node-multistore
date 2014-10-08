@@ -258,7 +258,7 @@ describe('medsafe/datapoint', function () {
         });
       });
 
-      it('returns all patient data by codes', function (done) {
+      it('returns all patient data with different codes', function (done) {
         var params = {
           uid: uid,
           system_id: system_id,
@@ -273,6 +273,35 @@ describe('medsafe/datapoint', function () {
         });
       });
     });
+
+    describe('receives an array of same codes', function () {
+      var system_id = chance.guid().toUpperCase();
+      var uid       = chance.guid().toLowerCase();
+      var code      = chance.guid().toUpperCase();
+      var patientDataPoints = helper.generateDataPoints(2, {
+        system_id: system_id, uid: uid, code: code
+      });
+
+      before(function (done) {
+        DataPoint.create(patientDataPoints.map(purr.pack), done);
+      });
+
+      it('returns all patient data by code', function (done) {
+        var params = {
+          uid: uid,
+          system_id: system_id,
+          code: [code]
+        };
+
+        DataPoint.find(params, function (err, results) {
+          if (err) return done(err);
+          results.should.eql(patientDataPoints);
+          done();
+        });
+      });
+
+    });
+
   });
 
 });
