@@ -4,7 +4,6 @@ var should = require('should');
 var uuid   = require('node-uuid');
 var chance = require('chance').Chance();
 var moment = require('moment');
-var cassandra = require('cassandra-driver');
 
 var repo = require('../../');
 
@@ -64,7 +63,8 @@ repo.schema('data_points', {
   },
   applied_status: {
     type: 'text',
-    required: true
+    required: true,
+    enum: ['', 'made', 'reported', 'prepared']
   },
   available_at: {
     type: 'timestamp',
