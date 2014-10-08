@@ -56,8 +56,8 @@ repo.schema('data_points', {
     morph: toUpperCase
   },
   value: 'text',
-  attributes: 'map',
-  source: 'map',
+  attributes: 'map<text, text>',
+  source: 'map<text, text>',
   applied_at: {
     type: 'timestamp',
     morph: getTime
@@ -109,6 +109,8 @@ var dataPoint = {
 };
 
 describe('adapters/cassandra', function () {
+  var dataPoints = [];
+
   before(function (done) {
     repo.init({
       cassandra: {
@@ -124,9 +126,9 @@ describe('adapters/cassandra', function () {
     });
   });
 
-  describe('#insert', function () {
+  describe('#create', function () {
     it('receives a single transaction', function (done) {
-      repo.cassandra.insert('data_points', dataPoint)
+      repo.cassandra.create('data_points', dataPoint)
         .then(done).catch(done);
     });
 
@@ -136,7 +138,6 @@ describe('adapters/cassandra', function () {
 
       var attrs      = {};
       var source     = {};
-      var dataPoints = [];
 
       while (count--) {
         attrs = {};
@@ -160,8 +161,8 @@ describe('adapters/cassandra', function () {
           sequence_id:    chance.word().toUpperCase(),
           code:           source.code,
           value:          chance.word(),
-          attributes:     {} || attrs,
-          source:         {} || source,
+          attributes:     attrs,
+          source:         source,
           applied_at:     chance.date({year: 2013}),
           applied_status: chance.pick(['', 'made', 'reported', 'prepared']),
           deleted:        false,
@@ -171,15 +172,15 @@ describe('adapters/cassandra', function () {
         });
       }
 
-      repo.cassandra.insert('data_points', dataPoints)
+      repo.cassandra.create('data_points', dataPoints)
         .then(done).catch(done);
     });
   });
 
-  describe('#select', function () {
+  describe('#find', function () {
     it('recieves no parameters', function (done) {
       repo.cassandra.select('data_points').then(function (results) {
-        results.rows.should.be.an.instanceof(Array);
+        results.rows.should.be.instanceof(Array);
         done();
       }).catch(done);
     })
@@ -193,7 +194,6 @@ describe('adapters/cassandra', function () {
       repo.cassandra.select('data_points', params).then(function (results) {
         var result = results.rows[0];
 
-        // some items not validated. recheck
         result.system_id.should.equal(dataPoint.system_id);
         result.uid.should.equal(dataPoint.uid);
         result.code.should.equal(dataPoint.code);

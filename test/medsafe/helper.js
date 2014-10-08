@@ -113,8 +113,7 @@ module.exports = {
         },
         deleted: 'boolean'
       }, {
-        table: 'data_points',
-        batch: 'one'
+        table: 'data_points'
       }),
 
       Profiles: db.cassandra.schema('Profiles', {
@@ -150,7 +149,8 @@ module.exports = {
         },
         set_id: {
           type: 'text',
-          required: true
+          required: true,
+          morph: toUpperCase
         },
         code: {
           type: 'text',
@@ -167,8 +167,7 @@ module.exports = {
           default: uuid.v1
         }
       }, {
-        table: 'data_points_by_set',
-        batch: 'one'
+        table: 'data_points_by_set'
       }),
 
       DataPointsByCutoff: db.cassandra.schema('DataPointsByCutoff', {
@@ -192,8 +191,7 @@ module.exports = {
           morph: toLowerCase
         }
       }, {
-        table: 'data_points_by_cutoff',
-        batch: 'one'
+        table: 'data_points_by_cutoff'
       })
     }
 
@@ -245,7 +243,7 @@ module.exports = {
       })
     };
 
-    var ModelSchema = [
+    var ModelSchemas = [
       Cassandra.DataPoints,
       Cassandra.Profiles,
       Cassandra.DataPointsBySet,
@@ -257,10 +255,14 @@ module.exports = {
     ];
 
     var options = {
-      unpack: purr.unpack
+      unpack: purr.unpack,
+      methods: {
+        findAll:   Cassandra.DataPoints,
+        find:      Cassandra.DataPoints
+      }
     };
 
-    return db.model('DataPoints', ModelSchema, options);
+    return db.model('DataPoints', ModelSchemas, options);
   },
 
   fetchDataPoint: function (params, opts, callback) {

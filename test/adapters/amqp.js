@@ -37,7 +37,7 @@ describe('adapters/amqp', function () {
     });
   });
 
-  describe('#insert', function () {
+  describe('#create', function () {
     it('receives a single transaction', function (done) {
       var transaction = {
         channel_id:       chance.word(),
@@ -58,7 +58,7 @@ describe('adapters/amqp', function () {
         exchange: 'caresharing.medintegrate'
       };
 
-      repo.amqp.insert('transaction_logs', transaction, options)
+      repo.amqp.create('transaction_logs', transaction, options)
         .then(done).catch(done);
     });
   });
