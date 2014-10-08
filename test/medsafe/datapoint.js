@@ -235,8 +235,7 @@ describe('medsafe/datapoint', function () {
       var system_id = chance.guid().toUpperCase();
       var uid       = chance.guid().toLowerCase();
       var patientDataPoints = helper.generateDataPoints(2, {
-        system_id : system_id,
-        uid       : uid
+        system_id: system_id, uid: uid
       });
 
       var codes = patientDataPoints.map(function (y) { return y.code; });
