@@ -180,7 +180,7 @@ describe('adapters/cassandra', function () {
   describe('#find', function () {
     it('recieves no parameters', function (done) {
       repo.cassandra.select('data_points').then(function (results) {
-        results.rows.should.be.instanceof(Array);
+        results.should.be.instanceof(Array);
         done();
       }).catch(done);
     })
@@ -192,7 +192,7 @@ describe('adapters/cassandra', function () {
       };
 
       repo.cassandra.select('data_points', params).then(function (results) {
-        var result = results.rows[0];
+        var result = results[0];
 
         result.system_id.should.equal(dataPoint.system_id);
         result.uid.should.equal(dataPoint.uid);

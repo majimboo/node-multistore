@@ -192,7 +192,7 @@ describe('medsafe/datapoint', function () {
           if (err) return done(err);
 
           // 11 at this point
-          result.rows.should.have.lengthOf(10);
+          result.should.have.lengthOf(10);
           done();
         });
       });
@@ -207,7 +207,7 @@ describe('medsafe/datapoint', function () {
 
         DataPoint.find(params, function (err, results) {
           if (err) return done(err);
-          var result = results.rows[0];
+          var result = results[0];
 
           result.system_id.should.equal(dataPoint.system_id);
           result.uid.should.equal(dataPoint.uid);
@@ -253,7 +253,7 @@ describe('medsafe/datapoint', function () {
         DataPoint.find(params, function (err, results) {
           if (err) return done(err);
 
-          results.rows.should.have.lengthOf(2);
+          results.should.have.lengthOf(2);
           done();
         });
       });
@@ -301,7 +301,36 @@ describe('medsafe/datapoint', function () {
       });
 
     });
+  });
 
+  describe('#findSet', function () {
+    var system_id = chance.guid().toUpperCase();
+    var uid       = chance.guid().toLowerCase();
+    var set_id    = chance.guid().toUpperCase();
+
+    var setDataPoints = helper.generateDataPoints(4, {
+      system_id: system_id, uid: uid, set_id: set_id
+    });
+
+    before(function (done) {
+      DataPoint.create(setDataPoints.map(purr.pack), done);
+    });
+
+    describe('receives valid params', function () {
+      var params = {
+        uid:       uid,
+        system_id: system_id,
+        set_id:    set_id
+      };
+
+      it('return relevant data points sets', function (done) {
+        DataPoint.findSet(params, function (err, results) {
+          results.length.should.equal(setDataPoints.length);
+          done();
+        });
+      });
+
+    });
   });
 
 });
