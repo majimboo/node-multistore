@@ -4,6 +4,7 @@ var should = require('should');
 var repo   = require('../../');
 var helper = require('./helper');
 var purr   = require('purr');
+var chance = require('chance').Chance();
 
 describe('medsafe/datapoint', function () {
   var DataPoint;
@@ -230,6 +231,49 @@ describe('medsafe/datapoint', function () {
       });
     });
 
+    describe('receives an array of codes', function () {
+      var system_id = chance.guid().toUpperCase();
+      var uid       = chance.guid().toLowerCase();
+      var patientDataPoints = helper.generateDataPoints(2, {
+        system_id : system_id,
+        uid       : uid
+      });
+
+      var codes = patientDataPoints.map(function (y) { return y.code; });
+
+      before(function (done) {
+        DataPoint.create(patientDataPoints.map(purr.pack), done);
+      });
+
+      it('returns all patient data by system_id and uid', function (done) {
+        var params = {
+          uid: uid,
+          system_id: system_id
+        };
+
+        DataPoint.find(params, function (err, results) {
+          if (err) return done(err);
+
+          results.rows.should.have.lengthOf(2);
+          done();
+        });
+      });
+
+      it('returns all patient data by codes', function (done) {
+        var params = {
+          uid: uid,
+          system_id: system_id,
+          code: codes
+        };
+
+        DataPoint.find(params, function (err, results) {
+          if (err) return done(err);
+
+          results.should.eql(patientDataPoints);
+          done();
+        });
+      });
+    });
   });
 
 });
