@@ -186,16 +186,17 @@ describe('medsafe/datapoint', function () {
     });
 
     describe('receives no params', function () {
-      it('returns all data points', function (done) {
-        DataPoint.findAll(function (err, result) {
-          if (err) return done(err);
+      // it('returns all data points', function (done) {
+      //   DataPoint.findAll(function (err, result) {
+      //     if (err) return done(err);
 
-          // 11 at this point
-          result.rows.should.have.lengthOf(11);
-          done();
-        });
-      });
+      //     // 11 at this point
+      //     result.rows.should.have.lengthOf(11);
+      //     done();
+      //   });
+      // });
     });
+
   });
 
   describe('#find', function () {
@@ -206,37 +207,38 @@ describe('medsafe/datapoint', function () {
     });
 
     describe('receives a valid uid and system_id', function () {
-      it('returns relevant data points', function (done) {
-        var params = {
-          uid: dataPoint.uid,
-          system_id: dataPoint.system_id
-        };
+      // it('returns relevant data points', function (done) {
+      //   var params = {
+      //     uid: dataPoint.uid,
+      //     system_id: dataPoint.system_id
+      //   };
 
-        DataPoint.find(params, function (err, results) {
-          if (err) return done(err);
-          var result = results.rows[0];
+      //   DataPoint.find(params, function (err, results) {
+      //     if (err) return done(err);
+      //     var result = results.rows[0];
 
-          result.system_id.should.equal(dataPoint.system_id);
-          result.uid.should.equal(dataPoint.uid);
-          result.code.should.equal(dataPoint.code);
-          result.set_id.should.equal(dataPoint.set_id);
-          result.sequence_id.should.equal(dataPoint.sequence_id);
-          result.data_type.should.equal(dataPoint.data_type);
-          result.value.should.equal(dataPoint.value);
-          result.applied_at.should.eql(dataPoint.applied_at);
-          result.applied_status.should.equal(dataPoint.applied_status);
-          result.available_at.should.eql(dataPoint.available_at);
-          result.translated_at.should.eql(dataPoint.translated_at);
-          result.deleted.should.equal(dataPoint.deleted);
+      //     result.system_id.should.equal(dataPoint.system_id);
+      //     result.uid.should.equal(dataPoint.uid);
+      //     result.code.should.equal(dataPoint.code);
+      //     result.set_id.should.equal(dataPoint.set_id);
+      //     result.sequence_id.should.equal(dataPoint.sequence_id);
+      //     result.data_type.should.equal(dataPoint.data_type);
+      //     result.value.should.equal(dataPoint.value);
+      //     result.applied_at.should.eql(dataPoint.applied_at);
+      //     result.applied_status.should.equal(dataPoint.applied_status);
+      //     result.available_at.should.eql(dataPoint.available_at);
+      //     result.translated_at.should.eql(dataPoint.translated_at);
+      //     result.deleted.should.equal(dataPoint.deleted);
 
-          // attributes
-          result.attributes.should.eql(dataPoint.attributes);
-          // source
-          result.source.should.eql(dataPoint.source);
-          done();
-        });
-      });
+      //     // attributes
+      //     result.attributes.should.eql(dataPoint.attributes);
+      //     // source
+      //     result.source.should.eql(dataPoint.source);
+      //     done();
+      //   });
+      // });
     });
+
   });
 
 });
