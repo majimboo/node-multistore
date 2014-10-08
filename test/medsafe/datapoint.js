@@ -317,11 +317,11 @@ describe('medsafe/datapoint', function () {
     });
 
     describe('receives valid params', function () {
-      var params = {
+      var params = purr.pack({
         uid:       uid,
         system_id: system_id,
         set_id:    set_id
-      };
+      });
 
       it('return relevant data points sets', function (done) {
         DataPoint.findSet(params, function (err, results) {
