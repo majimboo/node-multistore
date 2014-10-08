@@ -113,7 +113,7 @@ describe('adapters/cassandra', function () {
     repo.init({
       cassandra: {
         contactPoints: ['localhost'],
-        keyspace: 'medsafe'
+        keyspace: 'medsafe_test'
       }
     }, done);
   });
@@ -131,7 +131,7 @@ describe('adapters/cassandra', function () {
     });
 
     // https://datastax-oss.atlassian.net/browse/NODEJS-23
-    it('recieves multiple transactions'/**, function (done) {
+    it('recieves multiple transactions', function (done) {
       var count = 5;
 
       var attrs      = {};
@@ -160,8 +160,8 @@ describe('adapters/cassandra', function () {
           sequence_id:    chance.word().toUpperCase(),
           code:           source.code,
           value:          chance.word(),
-          attributes:     attrs,
-          source:         source,
+          attributes:     {} || attrs,
+          source:         {} || source,
           applied_at:     chance.date({year: 2013}),
           applied_status: chance.pick(['', 'made', 'reported', 'prepared']),
           deleted:        false,
@@ -173,7 +173,7 @@ describe('adapters/cassandra', function () {
 
       repo.cassandra.insert('data_points', dataPoints)
         .then(done).catch(done);
-    }**/);
+    });
   });
 
   describe('#select', function () {

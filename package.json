@@ -18,11 +18,13 @@
     "mocha": "^1.21.4",
     "moment": "^2.8.3",
     "node-uuid": "^1.4.1",
+    "purr": "*",
     "should": "^4.0.4",
     "uuid": "^2.0.1"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "preinstall": "npm rebuild"
   },
   "repository": {
     "type": "git",

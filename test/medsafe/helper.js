@@ -4,11 +4,12 @@ var _      = require('lodash');
 var uuid   = require('node-uuid');
 var chance = require('chance').Chance();
 var moment = require('moment');
+var purr   = require('purr');
 var cassandra = require('cassandra-driver');
 
 var cassandraClient = new cassandra.Client({
   contactPoints: ['localhost'],
-  keyspace:      'medsafe'
+  keyspace:      'medsafe_test'
 });
 
 // queries
@@ -186,7 +187,8 @@ module.exports = {
         },
         uid: {
           type: 'text',
-          required: true
+          required: true,
+          morph: toLowerCase
         }
       }, {
         table: 'data_points_by_cutoff',
@@ -236,23 +238,28 @@ module.exports = {
           _.each(data, function (value, key) {
             attr.push([key, value]);
           });
-          return attr;
+          // return attr;
+          return {};
         }
       })
     };
 
     var ModelSchema = [
       Cassandra.DataPoints,
-      // Cassandra.Profiles,
-      // Cassandra.DataPointsBySet,
-      // Cassandra.DataPointsByCutoff,
+      Cassandra.Profiles,
+      Cassandra.DataPointsBySet,
+      Cassandra.DataPointsByCutoff,
       Mysql.DataPoints,
       Mysql.PatientProfiles,
       Mysql.Profiles,
       Mysql.Attributes
     ];
 
-    return db.model('DataPoints', ModelSchema);
+    var options = {
+      unpack: purr.unpack
+    };
+
+    return db.model('DataPoints', ModelSchema, options);
   },
 
   fetchDataPoint: function (params, opts, callback) {
@@ -306,8 +313,8 @@ module.exports = {
         sequence_id:    chance.word().toUpperCase(),
         code:           source.code,
         value:          chance.word(),
-        attributes:     attrs,
-        source:         source,
+        attributes:     {} || attrs,
+        source:         {} || source,
         applied_at:     chance.date({year: 2013}),
         applied_status: options.applied_list || chance.pick(appliedStatuses),
         deleted:        false,

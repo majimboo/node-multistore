@@ -1,7 +1,7 @@
-CREATE KEYSPACE IF NOT EXISTS medsafe
+CREATE KEYSPACE IF NOT EXISTS medsafe_test
   with replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
-USE medsafe;
+USE medsafe_test;
 
 -- delete table if exist
 DROP TABLE IF EXISTS profiles;

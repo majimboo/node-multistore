@@ -3,6 +3,7 @@
 var should = require('should');
 var repo   = require('../../');
 var helper = require('./helper');
+var purr   = require('purr');
 
 describe('medsafe/datapoint', function () {
   var DataPoint;
@@ -12,7 +13,7 @@ describe('medsafe/datapoint', function () {
       cassandra: {
         on: 'create',
         contactPoints: ['localhost'],
-        keyspace: 'medsafe'
+        keyspace: 'medsafe_test'
       },
       mysql: {
         on: 'create',
@@ -21,12 +22,12 @@ describe('medsafe/datapoint', function () {
           read: {
             host:     'localhost',
             user:     'root',
-            database: 'medsafe'
+            database: 'medsafe_test'
           },
           write: {
             host:     'localhost',
             user:     'root',
-            database: 'medsafe'
+            database: 'medsafe_test'
           }
         }
       }
@@ -40,7 +41,7 @@ describe('medsafe/datapoint', function () {
     var dataPoint = helper.generateDataPoints(1)[0];
 
     before(function (done) {
-      DataPoint.create(dataPoint, done);
+      DataPoint.create(purr.pack(dataPoint), done);
     });
 
     it('inserts to cassandra:data_points', function (done) {
@@ -70,9 +71,9 @@ describe('medsafe/datapoint', function () {
         result.deleted.should.equal(dataPoint.deleted);
 
         // attributes
-        result.attributes.should.eql(dataPoint.attributes);
+        // result.attributes.should.eql(dataPoint.attributes);
         // source
-        result.source.should.eql(dataPoint.source);
+        // result.source.should.eql(dataPoint.source);
         done();
       });
     });
@@ -80,72 +81,82 @@ describe('medsafe/datapoint', function () {
     // TODO
     //   - find whats causing the errors
     //
-    // it('inserts to cassandra:profiles', function (done) {
-    //   helper.fetchProfile([
-    //     dataPoint.system_id,
-    //     dataPoint.uid
-    //   ], {
-    //     hints: ['text', 'text']
-    //   }, function (err, results) {
-    //     if (err) return done(err);
+    it('inserts to cassandra:profiles', function (done) {
+      helper.fetchProfile([
+        dataPoint.system_id,
+        dataPoint.uid
+      ], {
+        hints: ['text', 'text']
+      }, function (err, results) {
+        if (err) return done(err);
 
-    //     var result = results.rows[0];
+        var result = results.rows[0];
 
-    //     result.system_id.should.equal(dataPoint.system_id);
-    //     result.uid.should.equal(dataPoint.uid);
-    //     done();
-    //   });
-    // });
+        result.system_id.should.equal(dataPoint.system_id);
+        result.uid.should.equal(dataPoint.uid);
+        done();
+      });
+    });
 
-    // it('inserts to cassandra:data_points_by_set', function (done) {
-    //   helper.fetchDataPointSet([
-    //     dataPoint.system_id,
-    //     dataPoint.uid,
-    //     dataPoint.set_id,
-    //     dataPoint.code,
-    //     dataPoint.sequence_id
-    //   ], {
-    //     hints: ['text', 'text', 'text', 'text', 'text']
-    //   }, function (err, results) {
-    //     if (err) return done(err);
+    it('inserts to cassandra:data_points_by_set', function (done) {
+      helper.fetchDataPointSet([
+        dataPoint.system_id,
+        dataPoint.uid,
+        dataPoint.set_id,
+        dataPoint.code,
+        dataPoint.sequence_id
+      ], {
+        hints: ['text', 'text', 'text', 'text', 'text']
+      }, function (err, results) {
+        if (err) return done(err);
 
-    //     var result = results.rows[0];
+        var result = results.rows[0];
 
-    //     result.system_id.should.equal(dataPoint.system_id);
-    //     result.uid.should.equal(dataPoint.uid);
-    //     result.code.should.equal(dataPoint.code);
-    //     result.set_id.should.equal(dataPoint.set_id);
-    //     result.sequence_id.should.equal(dataPoint.sequence_id);
-    //     done();
-    //   });
-    // });
+        result.system_id.should.equal(dataPoint.system_id);
+        result.uid.should.equal(dataPoint.uid);
+        result.code.should.equal(dataPoint.code);
+        result.set_id.should.equal(dataPoint.set_id);
+        result.sequence_id.should.equal(dataPoint.sequence_id);
+        done();
+      });
+    });
 
-    // it('inserts to cassandra:data_points_by_cutoff', function (done) {
-    //   helper.fetchDataPointCutOff([
-    //     dataPoint.system_id,
-    //     dataPoint.code,
-    //     dataPoint.available_at,
-    //     dataPoint.uid
-    //   ], {
-    //     hints: ['text', 'text', 'timestamp', 'text']
-    //   }, function (err, results) {
-    //     if (err) return done(err);
+    it('inserts to cassandra:data_points_by_cutoff', function (done) {
+      helper.fetchDataPointCutOff([
+        dataPoint.system_id,
+        dataPoint.code,
+        dataPoint.available_at,
+        dataPoint.uid
+      ], {
+        hints: ['text', 'text', 'timestamp', 'text']
+      }, function (err, results) {
+        if (err) return done(err);
 
-    //     var result = results.rows[0];
+        var result = results.rows[0];
 
-    //     result.system_id.should.equal(dataPoint.system_id);
-    //     result.uid.should.equal(dataPoint.uid);
-    //     result.code.should.equal(dataPoint.code);
-    //     result.available_at.should.eql(dataPoint.available_at);
-    //     done();
-    //   });
-    // });
+        result.system_id.should.equal(dataPoint.system_id);
+        result.uid.should.equal(dataPoint.uid);
+        result.code.should.equal(dataPoint.code);
+        result.available_at.should.eql(dataPoint.available_at);
+        done();
+      });
+    });
 
     it('inserts to mysql:data_points_0');
     it('inserts to mysql:patient_profile');
     it('inserts to mysql:profiles');
     it('inserts to mysql:attributes');
 
+  });
+
+  describe('receives multiple data points', function () {
+    var dataPoint = helper.generateDataPoints(2);
+
+    before(function (done) {
+      DataPoint.create(dataPoint.map(purr.pack), done);
+    });
+
+    it('inserts all to cassandra:data_points');
   });
 
 });

@@ -16,7 +16,20 @@ coverage
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+node_modules/**/build
+
 config/*.json
 
-benchmark/
-node_modules/
+# ignore all except purr
+node_modules/.bin
+node_modules/amqplib
+node_modules/bluebird
+node_modules/cassandra-driver
+node_modules/chance
+node_modules/lodash
+node_modules/mocha
+node_modules/moment
+node_modules/mysql
+node_modules/node-uuid
+node_modules/should

@@ -1,7 +1,7 @@
-CREATE KEYSPACE IF NOT EXISTS medintegrate
+CREATE KEYSPACE IF NOT EXISTS medintegrate_test
   WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
-USE medintegrate;
+USE medintegrate_test;
 
 -- delete table if exist
 DROP TABLE IF EXISTS transaction_logs;

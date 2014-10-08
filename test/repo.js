@@ -16,7 +16,7 @@ describe('Repo', function () {
         cassandra: {
           on:            'create',
           contactPoints: ['localhost'],
-          keyspace:      'medintegrate'
+          keyspace:      'medintegrate_test'
         },
         amqp: {
           after:    'create',
@@ -29,7 +29,7 @@ describe('Repo', function () {
           connectionLimit: 10,
           host:            'localhost',
           user:            'root',
-          database:        'medintegrate'
+          database:        'medintegrate_test'
         }
       }, done);
     });

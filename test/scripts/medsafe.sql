@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS medsafe;
+CREATE DATABASE IF NOT EXISTS medsafe_test;
 
-USE medsafe;
+USE medsafe_test;
 
 DROP TABLE IF EXISTS data_points_0;
 CREATE TABLE data_points_0

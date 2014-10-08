@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS medintegrate;
+CREATE DATABASE IF NOT EXISTS medintegrate_test;
 
-USE medintegrate;
+USE medintegrate_test;
 
 DROP TABLE IF EXISTS txl;
 CREATE TABLE txl
