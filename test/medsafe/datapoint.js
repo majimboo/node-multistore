@@ -72,7 +72,6 @@ describe('medsafe/datapoint', function () {
           result.available_at.should.eql(dataPoint.available_at);
           result.translated_at.should.eql(dataPoint.translated_at);
           result.deleted.should.equal(dataPoint.deleted);
-
           // attributes
           result.attributes.should.eql(dataPoint.attributes);
           // source

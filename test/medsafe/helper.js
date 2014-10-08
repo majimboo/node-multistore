@@ -237,8 +237,7 @@ module.exports = {
           _.each(data, function (value, key) {
             attr.push([key, value]);
           });
-          // return attr;
-          return {};
+          return attr;
         }
       })
     };
