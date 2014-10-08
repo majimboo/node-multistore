@@ -71,9 +71,9 @@ describe('medsafe/datapoint', function () {
         result.deleted.should.equal(dataPoint.deleted);
 
         // attributes
-        // result.attributes.should.eql(dataPoint.attributes);
+        result.attributes.should.eql(dataPoint.attributes);
         // source
-        // result.source.should.eql(dataPoint.source);
+        result.source.should.eql(dataPoint.source);
         done();
       });
     });

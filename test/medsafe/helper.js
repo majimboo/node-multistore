@@ -92,8 +92,8 @@ module.exports = {
           morph: toUpperCase
         },
         value: 'text',
-        attributes: 'map',
-        source: 'map',
+        attributes: 'map<text, text>',
+        source: 'map<text, text>',
         applied_at: {
           type: 'timestamp',
           morph: getTime
@@ -313,8 +313,8 @@ module.exports = {
         sequence_id:    chance.word().toUpperCase(),
         code:           source.code,
         value:          chance.word(),
-        attributes:     {} || attrs,
-        source:         {} || source,
+        attributes:     attrs,
+        source:         source,
         applied_at:     chance.date({year: 2013}),
         applied_status: options.applied_list || chance.pick(appliedStatuses),
         deleted:        false,
