@@ -100,7 +100,8 @@ module.exports = {
         },
         applied_status: {
           type: 'text',
-          required: true
+          required: true,
+          enum: ['', 'made', 'reported', 'prepared']
         },
         available_at: {
           type: 'timestamp',
@@ -316,7 +317,7 @@ module.exports = {
         attributes:     attrs,
         source:         source,
         applied_at:     chance.date({year: 2013}),
-        applied_status: options.applied_list || chance.pick(appliedStatuses),
+        applied_status: chance.pick(options.applied_list || appliedStatuses),
         deleted:        false,
         set_id:         (options.set_id || chance.word()).toUpperCase(),
         available_at:   chance.date({year: 2013}),

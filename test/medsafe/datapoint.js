@@ -159,4 +159,20 @@ describe('medsafe/datapoint', function () {
     it('inserts all to cassandra:data_points');
   });
 
+  describe('receives a data point with an invalid data_type', function () {
+    var dataPoint = helper.generateDataPoints(1, {
+      applied_list: ['wrong']
+    })[0];
+    var errMsg = 'value for [ applied_status ] is invalid';
+
+    it('returns an error', function (done) {
+      DataPoint.create(purr.pack(dataPoint), function (error) {
+        error.should.be.instanceof(Error);
+        error.message.should.equal(errMsg);
+        done();
+      });
+    });
+
+  });
+
 });
