@@ -14,9 +14,9 @@ describe('medsafe/datapoint', function () {
     before(function (done) {
       repo.init({
         cassandra: {
-          on: 'create',
+          on:            'create',
           contactPoints: ['localhost'],
-          keyspace: 'medsafe_test'
+          keyspace:      'medsafe_test'
         },
         mysql: {
           on: 'create',
@@ -203,7 +203,7 @@ describe('medsafe/datapoint', function () {
         DataPoint.find(function (err, results) {
           if (err) return done(err);
 
-          results.length.should.be.above(9);
+          results.length.should.be.above(0);
           done();
         });
       });
@@ -250,7 +250,8 @@ describe('medsafe/datapoint', function () {
       var system_id = chance.guid().toUpperCase();
       var uid       = chance.guid().toLowerCase();
       var patientDataPoints = helper.generateDataPoints(2, {
-        system_id: system_id, uid: uid
+        system_id: system_id,
+        uid:       uid
       });
 
       var codes = patientDataPoints.map(function (y) { return y.code; });
@@ -296,7 +297,9 @@ describe('medsafe/datapoint', function () {
       var uid       = chance.guid().toLowerCase();
       var code      = chance.guid().toUpperCase();
       var patientDataPoints = helper.generateDataPoints(2, {
-        system_id: system_id, uid: uid, code: code
+        system_id: system_id,
+        uid:       uid,
+        code:      code
       });
 
       before(function (done) {
@@ -328,7 +331,9 @@ describe('medsafe/datapoint', function () {
     var set_id    = chance.guid().toUpperCase();
 
     var setDataPoints = helper.generateDataPoints(4, {
-      system_id: system_id, uid: uid, set_id: set_id
+      system_id: system_id,
+      uid: uid,
+      set_id: set_id
     });
 
     before(function (done) {
