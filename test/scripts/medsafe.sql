@@ -2,8 +2,8 @@ CREATE DATABASE IF NOT EXISTS medsafe_test;
 
 USE medsafe_test;
 
-DROP TABLE IF EXISTS data_points_0;
-CREATE TABLE data_points_0
+DROP TABLE IF EXISTS data_points;
+CREATE TABLE data_points
 (
   id INT(11) NOT NULL AUTO_INCREMENT,
   code TEXT NOT NULL,

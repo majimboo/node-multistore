@@ -199,7 +199,10 @@ module.exports = {
       DataPoints: db.mysql.schema('DataPoints', {
         code: 'text'
       }, {
-        table: 'data_points_0'
+        table: 'data_points',
+        partition: {
+          max: 5000
+        }
       }),
 
       PatientProfiles: db.mysql.schema('PatientProfiles', {
@@ -227,6 +230,9 @@ module.exports = {
         value: 'text'
       }, {
         table: 'attributes',
+        partition: {
+          max: 5000
+        },
         mapping: {
           key: 'attributes',
           value: 'attributes'
@@ -235,7 +241,7 @@ module.exports = {
         factory: function (data) {
           var attr = [];
           _.each(data, function (value, key) {
-            attr.push([key, value]);
+            attr.push({ key: key, value: value });
           });
           return attr;
         }
