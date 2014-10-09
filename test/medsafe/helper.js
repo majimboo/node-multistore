@@ -14,7 +14,7 @@ var cassandraClient = new cassandra.Client({
 });
 
 var mysqlClient  = mysql.createPool({
-  connectionLimit : 10,
+  connectionLimit:  10,
   user:             'root',
   database:         'medsafe_test'
 });
@@ -267,7 +267,8 @@ module.exports = {
     ];
 
     var options = {
-      unpack: purr.unpack,
+      parser:     purr.unpack,
+      serializer: purr.pack,
       methods: {
         search: {
           find: Cassandra.DataPoints,
@@ -348,5 +349,11 @@ module.exports = {
     }
 
     return dataPoints;
+  },
+
+  getTime: function (result) {
+    result.applied_at = result.applied_at.getTime();
+    result.available_at = result.available_at.getTime();
+    result.translated_at = result.translated_at.getTime();
   }
 }

@@ -219,7 +219,9 @@ describe('medsafe/datapoint', function () {
 
         DataPoint.find(params, function (err, results) {
           if (err) return done(err);
-          var result = results[0];
+
+          var result = purr.unpack(results[0]);
+          helper.getTime(result);
 
           result.system_id.should.equal(dataPoint.system_id);
           result.uid.should.equal(dataPoint.uid);
@@ -228,10 +230,10 @@ describe('medsafe/datapoint', function () {
           result.sequence_id.should.equal(dataPoint.sequence_id);
           result.data_type.should.equal(dataPoint.data_type);
           result.value.should.equal(dataPoint.value);
-          result.applied_at.should.eql(dataPoint.applied_at);
+          result.applied_at.should.eql(dataPoint.applied_at.getTime());
           result.applied_status.should.equal(dataPoint.applied_status);
-          result.available_at.should.eql(dataPoint.available_at);
-          result.translated_at.should.eql(dataPoint.translated_at);
+          result.available_at.should.eql(dataPoint.available_at.getTime());
+          result.translated_at.should.eql(dataPoint.translated_at.getTime());
           result.deleted.should.equal(dataPoint.deleted);
 
           // attributes
@@ -280,6 +282,7 @@ describe('medsafe/datapoint', function () {
         DataPoint.find(params, function (err, results) {
           if (err) return done(err);
 
+          results = results.map(purr.unpack);
           results.should.eql(patientDataPoints);
           done();
         });
@@ -307,6 +310,8 @@ describe('medsafe/datapoint', function () {
 
         DataPoint.find(params, function (err, results) {
           if (err) return done(err);
+
+          results = results.map(purr.unpack);
           results.should.eql(patientDataPoints);
           done();
         });
@@ -337,7 +342,10 @@ describe('medsafe/datapoint', function () {
 
       it('return relevant data points sets', function (done) {
         DataPoint.findSet(params, function (err, results) {
-          results.length.should.equal(setDataPoints.length);
+          if (err) return done(err);
+
+          results = results.map(purr.unpack);
+          results.should.have.lengthOf(setDataPoints.length);
           done();
         });
       });
