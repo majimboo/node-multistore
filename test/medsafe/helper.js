@@ -5,11 +5,18 @@ var uuid   = require('node-uuid');
 var chance = require('chance').Chance();
 var moment = require('moment');
 var purr   = require('purr');
+var mysql  = require('mysql');
 var cassandra = require('cassandra-driver');
 
 var cassandraClient = new cassandra.Client({
   contactPoints: ['localhost'],
   keyspace:      'medsafe_test'
+});
+
+var mysqlClient  = mysql.createPool({
+  connectionLimit : 10,
+  user:             'root',
+  database:         'medsafe_test'
 });
 
 // queries
@@ -289,6 +296,12 @@ module.exports = {
                             params,
                             opts,
                             callback);
+  },
+
+  fetchMyDataPoint: function (params, callback) {
+    var code = params.code;
+    var sql = mysql.format('SELECT * FROM data_points WHERE code = ?', code);
+    mysqlClient.query(sql, callback);
   },
 
   generateDataPoints: function (count, options) {

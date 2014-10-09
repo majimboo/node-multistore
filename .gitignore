@@ -33,3 +33,4 @@ node_modules/moment
 node_modules/mysql
 node_modules/node-uuid
 node_modules/should
+node_modules/debug

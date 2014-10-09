@@ -144,9 +144,22 @@ describe('medsafe/datapoint', function () {
         });
       });
 
-      it('inserts to mysql:data_points_0');
-      it('inserts to mysql:patient_profile');
-      it('inserts to mysql:profiles');
+      it('inserts to mysql:data_points', function (done) {
+        var params = {
+          code: dataPoint.code
+        };
+
+        helper.fetchMyDataPoint(params, function (err, results) {
+          if (err) return done(err);
+          var result = results[0];
+          results.should.have.lengthOf(1);
+          result.code.should.eql(dataPoint.code);
+          done();
+        });
+      });
+
+      it('inserts to mysql:patient_profiles');
+      it('inserts to mysql:patients');
       it('inserts to mysql:attributes');
 
     });

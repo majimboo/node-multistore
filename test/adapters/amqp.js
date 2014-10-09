@@ -33,7 +33,7 @@ describe('adapters/amqp', function () {
     it('connects to the amqp server', function (done) {
       // promise returns a connection object
       // so then(done) doesnt work
-      repo.amqp.connect().finally(done);
+      repo.amqp.connect(done);
     });
   });
 
@@ -41,7 +41,7 @@ describe('adapters/amqp', function () {
     it('receives a single transaction', function (done) {
       var transaction = {
         channel_id:       chance.word(),
-        date:             chance.date({string: true}),
+        date:             chance.date({string: true, year: 2013}),
         event_id:         cassandra.types.timeuuid(),
         transaction_id:   cassandra.types.uuid(),
         source_system_id: chance.word(),
@@ -54,12 +54,11 @@ describe('adapters/amqp', function () {
       }
 
       var options = {
-        key: 'export',
+        key: 'caresharing.medsafe.export',
         exchange: 'caresharing.medintegrate'
       };
 
-      repo.amqp.create('transaction_logs', transaction, options)
-        .then(done).catch(done);
+      repo.amqp.create('transaction_logs', transaction, options, done);
     });
   });
 

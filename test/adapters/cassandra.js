@@ -122,14 +122,13 @@ describe('adapters/cassandra', function () {
 
   describe('#connect', function () {
     it('connects to the cassandra server', function (done) {
-      repo.cassandra.connect().then(done).catch(done);
+      repo.cassandra.connect(done);
     });
   });
 
   describe('#create', function () {
     it('receives a single transaction', function (done) {
-      repo.cassandra.create('data_points', dataPoint)
-        .then(done).catch(done);
+      repo.cassandra.create('data_points', dataPoint, done);
     });
 
     // https://datastax-oss.atlassian.net/browse/NODEJS-23
@@ -172,17 +171,16 @@ describe('adapters/cassandra', function () {
         });
       }
 
-      repo.cassandra.create('data_points', dataPoints)
-        .then(done).catch(done);
+      repo.cassandra.create('data_points', dataPoints, done)
     });
   });
 
   describe('#find', function () {
     it('recieves no parameters', function (done) {
-      repo.cassandra.select('data_points').then(function (results) {
+      repo.cassandra.find('data_points', function (err, results) {
         results.should.be.instanceof(Array);
         done();
-      }).catch(done);
+      })
     })
 
     it('recieves an existing uid and system_id', function (done) {
@@ -191,7 +189,7 @@ describe('adapters/cassandra', function () {
         system_id: dataPoint.system_id
       };
 
-      repo.cassandra.select('data_points', params).then(function (results) {
+      repo.cassandra.find('data_points', params, function (err, results) {
         var result = results[0];
 
         result.system_id.should.equal(dataPoint.system_id);
@@ -212,8 +210,39 @@ describe('adapters/cassandra', function () {
         // source
         result.source.should.eql(dataPoint.source);
         done();
-      }).catch(done);
+      })
     });
+
+    it('recieves a parameter that contains an array', function (done) {
+      var params = {
+        uid: dataPoint.uid,
+        system_id: dataPoint.system_id,
+        code: [dataPoint.code, 'invalid']
+      };
+
+      repo.cassandra.find('data_points', params, function (err, results) {
+        var result = results[0];
+
+        result.system_id.should.equal(dataPoint.system_id);
+        result.uid.should.equal(dataPoint.uid);
+        result.code.should.equal(dataPoint.code);
+        result.set_id.should.equal(dataPoint.set_id);
+        result.sequence_id.should.equal(dataPoint.sequence_id);
+        result.data_type.should.equal(dataPoint.data_type);
+        result.value.should.equal(dataPoint.value);
+        result.applied_at.should.eql(dataPoint.applied_at);
+        result.applied_status.should.equal(dataPoint.applied_status);
+        result.available_at.should.eql(dataPoint.available_at);
+        result.translated_at.should.eql(dataPoint.translated_at);
+        result.deleted.should.equal(dataPoint.deleted);
+
+        // attributes
+        result.attributes.should.eql(dataPoint.attributes);
+        // source
+        result.source.should.eql(dataPoint.source);
+        done();
+      })
+    })
   });
 
 });
