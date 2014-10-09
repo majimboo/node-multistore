@@ -73,21 +73,22 @@ describe('cases/mysql_partition', function () {
   it('should use another table if table has reached max', function (done) {
     Schema.options.table = 'data_points';
 
-    repo.mysql.count('data_points', function (err, count) {
-      if (err) return done(err);
+    repo.mysql.on('creating', function () {
+      repo.mysql.count('data_points', function (err, count) {
+        if (err) return done(err);
 
-      if (count > MAX_ROWS) {
-        Schema.options.table = TABLE;
-      }
-
-      done();
+        if (count > MAX_ROWS) {
+          Schema.options.table = TABLE;
+        }
+      });
     });
+
+    done();
   });
 
   it('should create a the new partition table', function (done) {
     repo.mysql.client.query(CREATE_TABLE, function (err) {
       if (err) return done(err);
-
       done();
     });
   });
