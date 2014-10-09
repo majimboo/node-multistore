@@ -299,6 +299,10 @@ module.exports = {
                             callback);
   },
 
+  cleanMysql: function (table, callback) {
+    mysqlClient.query('TRUNCATE TABLE ' + table, callback);
+  },
+
   fetchMyDataPoint: function (params, callback) {
     var code = params.code;
     var sql = mysql.format('SELECT * FROM data_points WHERE code = ?', code);

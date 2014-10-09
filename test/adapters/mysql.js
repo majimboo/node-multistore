@@ -35,7 +35,7 @@ describe('adapters/mysql', function () {
         code: 'text'
       });
       done();
-    })
+    });
 
     it('throws an error if no schema is given', function (done) {
       should(function () {

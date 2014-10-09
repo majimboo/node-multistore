@@ -200,11 +200,10 @@ describe('medsafe/datapoint', function () {
 
     describe('receives no params', function () {
       it('returns all data points', function (done) {
-        DataPoint.find(function (err, result) {
+        DataPoint.find(function (err, results) {
           if (err) return done(err);
 
-          // 11 at this point
-          result.should.have.lengthOf(10);
+          results.length.should.be.above(9);
           done();
         });
       });
@@ -220,7 +219,9 @@ describe('medsafe/datapoint', function () {
         DataPoint.find(params, function (err, results) {
           if (err) return done(err);
 
-          var result = purr.unpack(results[0]);
+          results = results.map(purr.unpack);
+
+          var result = results[0];
           helper.getTime(result);
 
           result.system_id.should.equal(dataPoint.system_id);
@@ -267,7 +268,8 @@ describe('medsafe/datapoint', function () {
         DataPoint.find(params, function (err, results) {
           if (err) return done(err);
 
-          results.should.have.lengthOf(2);
+          results = results.map(purr.unpack);
+          results.should.containDeep(patientDataPoints);
           done();
         });
       });
@@ -344,8 +346,19 @@ describe('medsafe/datapoint', function () {
         DataPoint.findSet(params, function (err, results) {
           if (err) return done(err);
 
+          var expected = setDataPoints.map(function (data) {
+            return {
+              system_id: data.system_id,
+              uid: data.uid,
+              set_id: data.set_id,
+              sequence_id: data.sequence_id,
+              code: data.code
+            };
+          });
+
           results = results.map(purr.unpack);
           results.should.have.lengthOf(setDataPoints.length);
+          results.should.containDeep(expected);
           done();
         });
       });
