@@ -68,7 +68,7 @@ describe('adapters/mysql', function () {
 
   describe('#events', function () {
     it('emits the creating event', function (done) {
-      repo.mysql.on('creating', done);
+      repo.mysql.on('beforeCreate', done);
       repo.mysql.create('data_points', dataPoints);
     });
   });

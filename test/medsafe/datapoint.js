@@ -375,7 +375,7 @@ describe('medsafe/datapoint', function () {
     var justDataPoints = helper.generateDataPoints(1)[0];
 
     it('emits the creating event', function (done) {
-      repo.mysql.on('creating', done);
+      repo.mysql.on('beforeCreate', done);
       DataPoint.create(purr.pack(justDataPoints));
     });
   });
