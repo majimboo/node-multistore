@@ -97,4 +97,9 @@ describe('cases/mysql_partition', function () {
     repo.mysql.create('data_points', dataPoints, done);
   });
 
+  it('emits the creating event', function (done) {
+    repo.mysql.on('creating', done);
+    repo.mysql.create('data_points', dataPoints);
+  });
+
 });
